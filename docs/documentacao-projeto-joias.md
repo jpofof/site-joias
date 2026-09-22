@@ -85,9 +85,49 @@ Sem `featuredOrder` nem `createdAt`: a ordem de destaque segue a ordem de cadast
 
 **Wireframes de referência (privados, não versionados no repositório):** 5 iterações publicadas como artifacts durante o desenho desta seção, da estrutura inicial até a versão aprovada com painel de busca e destaques.
 
+## 3.2. Rotas do Site
+
+Com o cabeçalho aprovado (seção 3.1) e as decisões abaixo, o site deixou de ser uma página só com âncoras e passa a ter rotas de verdade:
+
+- `/` — Home (hero + seções + vitrine completa, ver 3.3)
+- `/produto/:id` — página própria de cada produto (fotos maiores, descrição completa)
+- `/sobre` — página própria, texto institucional
+
+O carrinho e o painel de busca continuam **globais**: abrem por cima de qualquer uma dessas três rotas, sem navegar para lugar nenhum.
+
+**Consequências técnicas:**
+- Precisa de uma biblioteca de rotas (`react-router-dom`) — não fazia parte da stack até aqui.
+- O Netlify precisa de uma regra de redirecionamento para rotas do lado do cliente funcionarem ao recarregar a página ou abrir um link direto: arquivo `public/_redirects` com a linha `/* /index.html 200`.
+- Se o `id` da URL de `/produto/:id` não existir mais no catálogo (produto removido pela cliente), mostrar uma mensagem de "produto não encontrado" com link de volta ao catálogo, em vez de tela em branco.
+
+## 3.3. Página Inicial (Home) — proposta inicial, valida com wireframe
+
+Esboço de arquitetura para a Home, aprovado por João em wireframe. Vários dos conteúdos abaixo dependem do que a cliente vai fornecer e ficam como propostas em aberto até ela decidir (marcados como tal).
+
+**Estrutura, de cima para baixo:**
+1. **Hero:** foto grande (produto ou pessoa usando), com uma frase sobreposta e um botão/link.
+2. **Categorias:** 4-6 blocos com foto + nome (Anéis, Brincos, Colares, Pulseiras, Piercings, Linha masculina), cada um levando à vitrine já filtrado por aquela categoria. Sem título de seção.
+3. **Destaques:** frase curta à esquerda ("Peças em destaque", **não** "mais vendidos" — o site não tem como saber o que realmente mais vende, já que o pedido fecha pelo WhatsApp) com link, e um vídeo ou foto à direita. Reaproveita o mesmo campo `destaque` já decidido para o painel de busca (seção 3.1): a cliente marca as peças uma vez, e a marcação alimenta as duas áreas.
+4. **Fotos de estilo de vida:** tira de fotos de pessoas usando peças, cada uma podendo linkar para um produto ou categoria específica.
+5. **Vitrine completa:** chips de categoria + grade de produtos (a mesma da seção 3.1), colocada mais abaixo na página para a Home não ficar carregada logo de cara.
+6. **Footer:** ver campos abaixo.
+
+**Hero — link controlado pela cliente (proposta em aberto):** como ainda não se sabe se ela vai ter "linhas" temáticas (ex.: "linha verão"), o link do hero fica livre, editável por ela no Decap CMS, em vez de fixo no código. Campos propostos numa coleção única de "Configurações do site" (não uma lista de produtos):
+- Foto do hero
+- Frase do hero
+- Link do hero (texto livre — catálogo, um produto específico, ou uma página futura de linha temática)
+- Texto do botão
+
+**Vídeo dos destaques (proposta em aberto):** toca sozinho, mudo, em loop, sem botão de play, ao entrar na tela (e pausa se sair dela). Ponto técnico: como o Decap versiona tudo pelo Git, um vídeo comitado no repositório pode inflar seu tamanho rapidamente. Proposta inicial: a cliente sobe um vídeo curto e comprimido; revisitar hospedagem externa (YouTube, Vimeo, Cloudinary) se isso virar problema.
+
+**Footer — campos opcionais** (mesma coleção de "Configurações do site"): WhatsApp, e-mail, Instagram, TikTok — cada um opcional, só aparece se preenchido. Conteúdo real (quais redes ela realmente tem) ainda não foi confirmado pela cliente.
+
+**Avisos legais (aberto, não decidido por João nem por Claude):** o site, como descrito hoje, não coleta dado pessoal por conta própria (carrinho fica só em `localStorage` do navegador). Nesse cenário, uma política de privacidade curta provavelmente basta, sem banner de cookies. Se a cliente quiser usar pixel de rastreamento (Meta/Instagram Ads, Google Analytics), aí entra coleta de dado de navegação e passa a ser recomendável um aviso de cookies. Perguntar à cliente se ela pretende usar algum desses antes de decidir. Texto de política de privacidade deve ser revisado por advogado antes de publicar — não é algo para o Claude Code redigir sozinho.
+
 ## 4. Stack Tecnológica
 
 - **Front-end:** React + TypeScript + Vite
+- **Rotas:** React Router (`react-router-dom`) — ver seção 3.2
 - **Estilização:** Tailwind CSS v4 (plugin `@tailwindcss/vite`; tema configurado via `@theme` no CSS, sem `tailwind.config.ts` obrigatório)
 - **Qualidade de código:** ESLint
 - **Gerenciamento de estado do carrinho:** Context API + hook customizado (`useCart`), persistido em `localStorage`
@@ -103,23 +143,35 @@ site-joias/
     admin/
       config.yml          # configuração do Decap CMS (coleções, campos)
       index.html          # entrada do painel admin
+    _redirects            # regra de SPA para o Netlify — ver seção 3.2
   src/
     types/
       produto.ts           # type Produto (id, nome, categoria, preco, imagem, descricao?, destaque?) — ver seção 3.1
+      site-config.ts        # type dos campos de "Configurações do site" (hero, footer) — ver seção 3.3
+    pages/
+      Home.tsx              # hero + categorias + destaques + lifestyle + vitrine — ver seção 3.3
+      Produto.tsx            # rota /produto/:id — ver seção 3.2
+      Sobre.tsx               # rota /sobre — ver seção 3.2
     components/
-      ProductCard.tsx       # recebe um Produto via props
-      ProductGrid.tsx       # recebe Produto[] e faz o map por categoria
-      CategoryFilter.tsx    # filtro por categoria (pulseiras, anéis, etc.)
-      SearchPanel.tsx        # painel de busca (categorias + sugestões via destaque + resultados) — ver seção 3.1
-      Cart.tsx               # painel/drawer do carrinho
-      CartButton.tsx         # botão flutuante com contagem de itens
-      WhatsAppCTA.tsx        # monta o link wa.me com os itens selecionados
+      Hero.tsx               # foto + frase + link/CTA editáveis via CMS
+      CategoryTiles.tsx      # blocos de categoria na Home
+      DestaquesTeaser.tsx    # frase + vídeo/foto, usa produtos com destaque=true
+      LifestyleStrip.tsx     # tira de fotos de estilo de vida, cada uma com link
+      ProductCard.tsx        # recebe um Produto via props
+      ProductGrid.tsx        # recebe Produto[] e faz o map por categoria
+      CategoryFilter.tsx     # filtro por categoria (pulseiras, anéis, etc.)
+      SearchPanel.tsx         # painel de busca (categorias + sugestões via destaque + resultados) — ver seção 3.1
+      Cart.tsx                # painel/drawer do carrinho
+      CartButton.tsx          # botão flutuante com contagem de itens
+      WhatsAppCTA.tsx         # monta o link wa.me com os itens selecionados
+      SiteFooter.tsx          # links, contato (campos opcionais) — ver seção 3.3
     hooks/
       useCart.ts             # lógica do carrinho + persistência em localStorage
     context/
       CartContext.tsx        # provider do carrinho pra toda a árvore de componentes
     data/
       produtos/               # arquivos .md ou .json gerados/editados pelo Decap CMS
+      site-config.json         # arquivo único gerado pelo Decap ("Configurações do site")
     App.tsx
     main.tsx
   netlify.toml
@@ -256,6 +308,13 @@ npx skills add rtadewald/skills@img-to-html -g -y
 - Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude
 - Avaliar no navegador o `ProductCard` redesenhado (branch `teste-skill-design`) e decidir se a direção estética serve à cliente; se aprovado, fazer merge ou reaproveitar no projeto real
 - Hospedar localmente a fonte serif escolhida (Cormorant Garamond), em vez de depender de serviço externo
+- Confirmar se cada produto terá mais de uma foto (galeria na página `/produto/:id`) ou só a mesma foto do card ampliada — muda o tipo `Produto` (`imagem: string` → `imagens: string[]`)
+- Definir a página `/produto/:id`, a página `/sobre` (conteúdo institucional, vem da cliente) e o detalhe da interface do carrinho (drawer) — ainda não desenhados em wireframe
+- Home (seção 3.3): decidir o link do hero (proposta: campo livre editável pela cliente no Decap, não fixo no código)
+- Home: decidir hospedagem do vídeo de destaques — vídeo comitado no repositório (comprimido) vs. serviço externo (YouTube/Vimeo/Cloudinary); revisitar se o tamanho do repositório crescer demais
+- Footer: confirmar com a cliente quais contatos/redes ela realmente tem (WhatsApp, e-mail, Instagram, TikTok) — os campos já são opcionais no CMS, falta o conteúdo
+- Perguntar à cliente se ela pretende usar pixel de rastreamento (Meta/Instagram Ads, Google Analytics); a resposta decide se o site precisa de aviso de cookies além da política de privacidade
+- Redigir a política de privacidade do site (e aviso de cookies, se aplicável) — revisão por advogado recomendada antes de publicar; não é algo para o Claude Code decidir ou redigir sozinho
 
 ## 10. Referência de Implementação (piloto)
 
