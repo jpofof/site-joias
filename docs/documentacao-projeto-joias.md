@@ -38,19 +38,28 @@ Dona do negócio (cliente)
 
 Nenhum servidor próprio, nenhum banco de dados tradicional — os dados dos produtos vivem como arquivos (Markdown/JSON) dentro do próprio repositório, versionados no Git.
 
-## 3.1. Navegação e Modelo de Produto (escopo reduzido)
+## 3.1. Navegação e Modelo de Produto (escopo reduzido, validado em wireframe)
 
-Foi produzida uma análise de UX completa para cabeçalho, mega menu e pesquisa (arquitetura para catálogos grandes, com painel de categorias em colunas, painel de busca com recomendações e campos de destaque). Essa arquitetura **foi guardada como referência** em `docs/reference/arquitetura-navegacao-mega-menu.md`, para ser retomada se o catálogo crescer além de 20-25 produtos. Para o escopo atual, foi adotada uma versão reduzida:
+Foi produzida uma análise de UX completa para cabeçalho, mega menu e pesquisa (arquitetura para catálogos grandes, com painel de categorias em colunas, painel de busca com recomendações e campos de destaque). Essa arquitetura **foi guardada como referência** em `docs/reference/arquitetura-navegacao-mega-menu.md`, para ser retomada se o catálogo crescer além de 20-25 produtos. Para o escopo atual, foi validada em wireframe interativo (5 iterações) uma versão intermediária: mais simples que a arquitetura grande, mas mantendo um painel de busca com sugestões.
 
-**Cabeçalho (desktop e mobile, sem hambúrguer):**
+**Cabeçalho (desktop, tablet e mobile, sem hambúrguer):**
 ```
-LOGOTIPO   CATÁLOGO   SOBRE   🔍   🛒(contador)
+LOGOTIPO                    CATÁLOGO  SOBRE  [🔍 Pesquisar]  🛒(contador)
 ```
-- **Catálogo:** link que rola/navega até a grade de produtos (`ProductGrid`), onde o filtro por categoria (`CategoryFilter`) aparece como chips/abas horizontais — sem mega menu ou painel separado.
+- Logo sozinho à esquerda; **Catálogo**, **Sobre**, o ícone de pesquisa e o carrinho formam um único grupo à direita — nada fica centralizado isolado.
+- **Catálogo:** link que rola/navega até a grade de produtos (`ProductGrid`), onde o filtro por categoria (`CategoryFilter`) aparece como chips/abas horizontais.
 - **Sobre:** âncora ou página simples.
-- **Pesquisa:** ícone que expande um campo de texto no próprio cabeçalho, filtrando os produtos já carregados em memória (sem painel sobreposto, sem recomendações, sem estado dedicado de "nenhum resultado").
+- **Pesquisa:** só um ícone no cabeçalho (não um campo inline). Ao clicar, abre um painel cobrindo a área do site (ver abaixo).
 - **Carrinho:** ícone com contador, abre o drawer.
-- **Mobile:** os mesmos 4 elementos ficam visíveis (sem hambúrguer); se o espaço apertar, "Catálogo" pode virar um ícone de grade, mas nada fica escondido atrás de um menu.
+- **Mobile:** os mesmos 4 elementos ficam visíveis, sem hambúrguer. Se o nome da loja for longo e a linha apertar, a saída é quebrar em duas linhas (logo em cima, grupo de navegação embaixo) — nunca esconder um item atrás de menu ou trocá-lo por ícone sem rótulo.
+
+**Painel de busca (abre ao clicar no ícone de pesquisa):**
+- Campo de busca no topo, com botão de fechar.
+- Categorias listadas à esquerda no desktop/tablet; viram chips horizontais no topo do painel no mobile.
+- Área de resultados à direita:
+  - **Antes de digitar:** mostra os produtos marcados como destaque pela cliente (rótulo "Sugestões da loja"), na ordem em que ela os cadastrar no Decap CMS. Sugerir um limite (4 a 6 produtos) para essa área não virar uma segunda vitrine.
+  - **Ao digitar:** a grade passa a mostrar os resultados reais da busca sobre o catálogo carregado em memória (sem chamada ao servidor).
+- Fechar com Esc, foco automático no campo ao abrir, foco devolvido ao ícone ao fechar (regra geral de acessibilidade do projeto).
 
 **Modelo de produto** (`src/types/produto.ts`), refeito do zero para o escopo atual:
 ```ts
@@ -69,9 +78,12 @@ export type Produto = {
   preco: number;
   imagem: string;
   descricao?: string;
+  destaque?: boolean; // cliente marca "Destacar na busca" no Decap CMS; controla as sugestões do painel de busca
 };
 ```
-Sem campos de destaque, ordenação manual ou data de criação por enquanto — eles pertencem à arquitetura maior guardada como referência, e podem ser adicionados sem quebrar o tipo atual se o catálogo crescer.
+Sem `featuredOrder` nem `createdAt`: a ordem de destaque segue a ordem de cadastro no CMS, para manter simples. Esses campos pertencem à arquitetura maior guardada como referência, e podem ser adicionados sem quebrar o tipo atual se o catálogo crescer.
+
+**Wireframes de referência (privados, não versionados no repositório):** 5 iterações publicadas como artifacts durante o desenho desta seção, da estrutura inicial até a versão aprovada com painel de busca e destaques.
 
 ## 4. Stack Tecnológica
 
@@ -93,11 +105,12 @@ site-joias/
       index.html          # entrada do painel admin
   src/
     types/
-      produto.ts           # type Produto (id, nome, categoria, preco, imagem, descricao?) — ver seção 3.1
+      produto.ts           # type Produto (id, nome, categoria, preco, imagem, descricao?, destaque?) — ver seção 3.1
     components/
       ProductCard.tsx       # recebe um Produto via props
       ProductGrid.tsx       # recebe Produto[] e faz o map por categoria
       CategoryFilter.tsx    # filtro por categoria (pulseiras, anéis, etc.)
+      SearchPanel.tsx        # painel de busca (categorias + sugestões via destaque + resultados) — ver seção 3.1
       Cart.tsx               # painel/drawer do carrinho
       CartButton.tsx         # botão flutuante com contagem de itens
       WhatsAppCTA.tsx        # monta o link wa.me com os itens selecionados
@@ -237,8 +250,7 @@ npx skills add rtadewald/skills@img-to-html -g -y
 
 - Definir se o CMS será Decap CMS (com login) ou modelo mais simples (planilha), com base na familiaridade da cliente. Se for Decap, decidir o método de autenticação antes do bloco do CMS: Netlify Identity + Git Gateway (Identity foi sinalizado como descontinuado pela Netlify em fev/2025, sem previsão imediata de remoção; conferir o estado atual), backend GitHub com proxy OAuth (ex.: Cloudflare Worker, exige OAuth App e subdomínio, e a cliente precisa de conta no GitHub com acesso ao repositório) ou o modelo mais simples. Fazer um teste pequeno numa branch com o perfil real da cliente antes de fechar
 - Pedir à cliente: identidade visual (logo, paleta, fontes), fotos (e quantas precisam ser refeitas), referências de sites de que ela gosta e o número de WhatsApp do chip novo
-- Confirmar com a cliente se o escopo reduzido de navegação (seção 3.1) atende, ou se ela quer a arquitetura maior (mega menu, busca com recomendações) desde já
-- Fechar a implementação real do cabeçalho mobile (a decisão da seção 3.1 é a proposta atual; validar no protótipo antes de considerar fechada)
+- Cabeçalho e painel de busca (seção 3.1) já validados por João em wireframe interativo (5 iterações); falta só mostrar à cliente e confirmar o limite de produtos em destaque (sugestão: 4 a 6)
 - Confirmar quantidade final de fotos que precisam ser refeitas
 - Confirmar valor final dentro da faixa R$1.800–R$2.500 após levantamento de fotos/ajustes
 - Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude

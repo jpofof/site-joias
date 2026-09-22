@@ -83,24 +83,27 @@ Vitrine online de joias para uma cliente próxima. Sem checkout e sem pagamento:
 ```
 public/admin/ (config.yml, index.html)
 src/types/produto.ts
-src/components/ (ProductCard, ProductGrid, CategoryFilter, Cart, CartButton, WhatsAppCTA)
+src/components/ (ProductCard, ProductGrid, CategoryFilter, SearchPanel, Cart, CartButton, WhatsAppCTA)
 src/hooks/useCart.ts
 src/context/CartContext.tsx
 src/data/produtos/  (arquivos gerados/editados pelo Decap)
 ```
 Um único `ProductCard` recebendo um `Produto` por props; nunca um componente por produto.
 
-## Navegação e Modelo de Produto (escopo reduzido — ver seção 3.1 da documentação)
-Existe uma arquitetura de navegação completa (mega menu, painel de busca com recomendações, campos de destaque) guardada como referência em `docs/reference/arquitetura-navegacao-mega-menu.md`, para catálogos maiores. NÃO implementar essa versão agora. O escopo atual é:
-- Cabeçalho: `LOGOTIPO | CATÁLOGO | SOBRE | 🔍 | 🛒`, sem mega menu e sem hambúrguer (nem no mobile).
+## Navegação, Busca e Modelo de Produto (escopo reduzido, validado em wireframe — ver seção 3.1 da documentação)
+Existe uma arquitetura de navegação completa (mega menu, painel de busca com recomendações elaboradas, campos de ordenação) guardada como referência em `docs/reference/arquitetura-navegacao-mega-menu.md`, para catálogos maiores. NÃO implementar essa versão agora. A versão aprovada (5 iterações de wireframe) é:
+- Cabeçalho: logo sozinho à esquerda; `CATÁLOGO`, `SOBRE`, ícone de pesquisa e ícone de carrinho num único grupo à direita — nada centralizado isolado. Sem mega menu, sem hambúrguer (nem no mobile). Se a linha apertar no mobile, quebrar em duas linhas (logo em cima, grupo embaixo) — nunca esconder item ou trocar por ícone sem rótulo.
 - Catálogo: link que rola/navega até `ProductGrid`; filtro por categoria via `CategoryFilter` (chips/abas), não um painel separado.
-- Pesquisa: campo de texto simples no cabeçalho, filtra os produtos já carregados em memória; sem painel sobreposto, sem recomendações, sem estado dedicado de "nenhum resultado".
+- Pesquisa: só um ícone no cabeçalho. Ao clicar, abre `SearchPanel`, um painel cobrindo a área do site: campo de busca + fechar no topo; categorias à esquerda (chips horizontais no mobile); área de resultados à direita.
+  - Antes de digitar: mostra os produtos com `destaque: true`, rótulo "Sugestões da loja", na ordem do catálogo (sem campo de prioridade separado). Limite sugerido: 4 a 6 produtos.
+  - Ao digitar: mostra os resultados reais da busca sobre os produtos já carregados em memória.
+  - Fechar com Esc; foco automático no campo ao abrir; foco devolvido ao ícone ao fechar.
 - Modelo de produto:
 ```ts
 export type Categoria = 'aneis' | 'brincos' | 'colares' | 'pulseiras' | 'piercings' | 'linha-masculina';
-export type Produto = { id: string; nome: string; categoria: Categoria; preco: number; imagem: string; descricao?: string };
+export type Produto = { id: string; nome: string; categoria: Categoria; preco: number; imagem: string; descricao?: string; destaque?: boolean };
 ```
-Sem `isFeatured`, `featuredOrder` ou `createdAt` por enquanto.
+Sem `featuredOrder` ou `createdAt` por enquanto — a ordem de destaque é a ordem de cadastro no Decap CMS.
 
 ## Decisões já tomadas (não reabrir sem eu pedir)
 - Carrinho por presença/ausência: cada peça é única, sem controle de quantidade.
