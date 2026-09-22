@@ -38,6 +38,41 @@ Dona do negócio (cliente)
 
 Nenhum servidor próprio, nenhum banco de dados tradicional — os dados dos produtos vivem como arquivos (Markdown/JSON) dentro do próprio repositório, versionados no Git.
 
+## 3.1. Navegação e Modelo de Produto (escopo reduzido)
+
+Foi produzida uma análise de UX completa para cabeçalho, mega menu e pesquisa (arquitetura para catálogos grandes, com painel de categorias em colunas, painel de busca com recomendações e campos de destaque). Essa arquitetura **foi guardada como referência** em `docs/reference/arquitetura-navegacao-mega-menu.md`, para ser retomada se o catálogo crescer além de 20-25 produtos. Para o escopo atual, foi adotada uma versão reduzida:
+
+**Cabeçalho (desktop e mobile, sem hambúrguer):**
+```
+LOGOTIPO   CATÁLOGO   SOBRE   🔍   🛒(contador)
+```
+- **Catálogo:** link que rola/navega até a grade de produtos (`ProductGrid`), onde o filtro por categoria (`CategoryFilter`) aparece como chips/abas horizontais — sem mega menu ou painel separado.
+- **Sobre:** âncora ou página simples.
+- **Pesquisa:** ícone que expande um campo de texto no próprio cabeçalho, filtrando os produtos já carregados em memória (sem painel sobreposto, sem recomendações, sem estado dedicado de "nenhum resultado").
+- **Carrinho:** ícone com contador, abre o drawer.
+- **Mobile:** os mesmos 4 elementos ficam visíveis (sem hambúrguer); se o espaço apertar, "Catálogo" pode virar um ícone de grade, mas nada fica escondido atrás de um menu.
+
+**Modelo de produto** (`src/types/produto.ts`), refeito do zero para o escopo atual:
+```ts
+export type Categoria =
+  | 'aneis'
+  | 'brincos'
+  | 'colares'
+  | 'pulseiras'
+  | 'piercings'
+  | 'linha-masculina';
+
+export type Produto = {
+  id: string;
+  nome: string;
+  categoria: Categoria;
+  preco: number;
+  imagem: string;
+  descricao?: string;
+};
+```
+Sem campos de destaque, ordenação manual ou data de criação por enquanto — eles pertencem à arquitetura maior guardada como referência, e podem ser adicionados sem quebrar o tipo atual se o catálogo crescer.
+
 ## 4. Stack Tecnológica
 
 - **Front-end:** React + TypeScript + Vite
@@ -58,7 +93,7 @@ site-joias/
       index.html          # entrada do painel admin
   src/
     types/
-      produto.ts           # interface Produto (id, nome, preco, imagem, categoria, descricao)
+      produto.ts           # type Produto (id, nome, categoria, preco, imagem, descricao?) — ver seção 3.1
     components/
       ProductCard.tsx       # recebe um Produto via props
       ProductGrid.tsx       # recebe Produto[] e faz o map por categoria
@@ -202,6 +237,8 @@ npx skills add rtadewald/skills@img-to-html -g -y
 
 - Definir se o CMS será Decap CMS (com login) ou modelo mais simples (planilha), com base na familiaridade da cliente. Se for Decap, decidir o método de autenticação antes do bloco do CMS: Netlify Identity + Git Gateway (Identity foi sinalizado como descontinuado pela Netlify em fev/2025, sem previsão imediata de remoção; conferir o estado atual), backend GitHub com proxy OAuth (ex.: Cloudflare Worker, exige OAuth App e subdomínio, e a cliente precisa de conta no GitHub com acesso ao repositório) ou o modelo mais simples. Fazer um teste pequeno numa branch com o perfil real da cliente antes de fechar
 - Pedir à cliente: identidade visual (logo, paleta, fontes), fotos (e quantas precisam ser refeitas), referências de sites de que ela gosta e o número de WhatsApp do chip novo
+- Confirmar com a cliente se o escopo reduzido de navegação (seção 3.1) atende, ou se ela quer a arquitetura maior (mega menu, busca com recomendações) desde já
+- Fechar a implementação real do cabeçalho mobile (a decisão da seção 3.1 é a proposta atual; validar no protótipo antes de considerar fechada)
 - Confirmar quantidade final de fotos que precisam ser refeitas
 - Confirmar valor final dentro da faixa R$1.800–R$2.500 após levantamento de fotos/ajustes
 - Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude

@@ -90,6 +90,18 @@ src/data/produtos/  (arquivos gerados/editados pelo Decap)
 ```
 Um único `ProductCard` recebendo um `Produto` por props; nunca um componente por produto.
 
+## Navegação e Modelo de Produto (escopo reduzido — ver seção 3.1 da documentação)
+Existe uma arquitetura de navegação completa (mega menu, painel de busca com recomendações, campos de destaque) guardada como referência em `docs/reference/arquitetura-navegacao-mega-menu.md`, para catálogos maiores. NÃO implementar essa versão agora. O escopo atual é:
+- Cabeçalho: `LOGOTIPO | CATÁLOGO | SOBRE | 🔍 | 🛒`, sem mega menu e sem hambúrguer (nem no mobile).
+- Catálogo: link que rola/navega até `ProductGrid`; filtro por categoria via `CategoryFilter` (chips/abas), não um painel separado.
+- Pesquisa: campo de texto simples no cabeçalho, filtra os produtos já carregados em memória; sem painel sobreposto, sem recomendações, sem estado dedicado de "nenhum resultado".
+- Modelo de produto:
+```ts
+export type Categoria = 'aneis' | 'brincos' | 'colares' | 'pulseiras' | 'piercings' | 'linha-masculina';
+export type Produto = { id: string; nome: string; categoria: Categoria; preco: number; imagem: string; descricao?: string };
+```
+Sem `isFeatured`, `featuredOrder` ou `createdAt` por enquanto.
+
 ## Decisões já tomadas (não reabrir sem eu pedir)
 - Carrinho por presença/ausência: cada peça é única, sem controle de quantidade.
 - O carrinho NÃO é limpo automaticamente depois de enviar ao WhatsApp.
