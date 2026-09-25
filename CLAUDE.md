@@ -73,11 +73,11 @@ Vitrine online de joias para uma cliente próxima. Sem checkout e sem pagamento:
 
 ## Stack
 - React + TypeScript + Vite
-- Rotas: React Router (`react-router-dom`) — rotas: `/`, `/produto/:id`, `/sobre`. Carrinho e busca continuam globais (overlay), não são rotas.
+- Rotas: React Router (`react-router-dom`) — rotas: `/`, `/catalogo`, `/busca?q=`, `/produto/:id`, `/carrinho` (com estado vazio), `/pedido`, `/sobre`, `/privacidade`, `/termos`, `*` (404). Busca e Carrinho são páginas, não overlays. O único overlay é o Menu mobile.
 - Netlify: `public/_redirects` com `/* /index.html 200` (obrigatório para rotas do lado do cliente funcionarem)
 - Tailwind CSS v4 (`@tailwindcss/vite`; tema em `@theme` dentro de `src/index.css`; sem `tailwind.config.ts`)
 - ESLint
-- Carrinho: Context API + hook `useCart` + `localStorage` (sem biblioteca de estado)
+- Carrinho: Context API + hook `useCart` + `localStorage` (sem biblioteca de estado). Guarda `{ id, quantidade }`.
 - CMS: Decap CMS em `/admin` (método de autenticação ainda em decisão — não implementar antes de eu decidir)
 - Deploy: Netlify. Versionamento: Git + GitHub
 
@@ -87,23 +87,23 @@ public/admin/ (config.yml, index.html)
 public/_redirects
 src/types/produto.ts
 src/types/site-config.ts (campos de "Configurações do site": hero, footer)
-src/pages/ (Home, Produto, Sobre)
-src/components/ (Hero, CategoryTiles, DestaquesTeaser, LifestyleStrip, ProductCard, ProductGrid, CategoryFilter, SearchPanel, Cart, CartButton, WhatsAppCTA, SiteFooter)
+src/pages/ (Home, Catalogo, Busca, Produto, Carrinho, Pedido, Sobre, Privacidade, Termos, NotFound)
+src/components/ (SiteHeader, MenuMobile, Hero, CategoryTiles, DestaquesTeaser, ProductCard, ProductGrid, CategoryFilter, SiteFooter, ...)
+src/config/legal.ts (dados pendentes da cliente para Privacidade/Termos)
+src/config/site.ts (número de WhatsApp e demais constantes do site)
 src/hooks/useCart.ts
 src/context/CartContext.tsx
 src/data/produtos/  (arquivos gerados/editados pelo Decap)
 src/data/site-config.json  (arquivo único gerado pelo Decap)
 ```
 Um único `ProductCard` recebendo um `Produto` por props; nunca um componente por produto.
+Fonte de verdade visual: `docs/design/*.dc.html` (ver `docs/reference/design-handoff.md`).
 
-## Navegação, Busca e Modelo de Produto (escopo reduzido, validado em wireframe — ver seção 3.1 da documentação)
-Existe uma arquitetura de navegação completa (mega menu, painel de busca com recomendações elaboradas, campos de ordenação) guardada como referência em `docs/reference/arquitetura-navegacao-mega-menu.md`, para catálogos maiores. NÃO implementar essa versão agora. A versão aprovada (5 iterações de wireframe) é:
-- Cabeçalho: logo sozinho à esquerda; `CATÁLOGO`, `SOBRE`, ícone de pesquisa e ícone de carrinho num único grupo à direita — nada centralizado isolado. Sem mega menu, sem hambúrguer (nem no mobile). Se a linha apertar no mobile, quebrar em duas linhas (logo em cima, grupo embaixo) — nunca esconder item ou trocar por ícone sem rótulo.
-- Catálogo: link que rola/navega até `ProductGrid`; filtro por categoria via `CategoryFilter` (chips/abas), não um painel separado.
-- Pesquisa: só um ícone no cabeçalho. Ao clicar, abre `SearchPanel`, um painel cobrindo a área do site: campo de busca + fechar no topo; categorias à esquerda (chips horizontais no mobile); área de resultados à direita.
-  - Antes de digitar: mostra os produtos com `destaque: true`, rótulo "Sugestões da loja", na ordem do catálogo (sem campo de prioridade separado). Limite sugerido: 4 a 6 produtos.
-  - Ao digitar: mostra os resultados reais da busca sobre os produtos já carregados em memória.
-  - Fechar com Esc; foco automático no campo ao abrir; foco devolvido ao ícone ao fechar.
+## Navegação, Busca e Modelo de Produto (substituído pelo design aprovado em `docs/design/`; o mega menu segue só como referência)
+A arquitetura de navegação completa (mega menu, painel de busca elaborado, campos de ordenação) fica como referência em `docs/reference/arquitetura-navegacao-mega-menu.md`. NÃO implementar. O que vale é o design aprovado:
+- Cabeçalho (ver `design-handoff.md` §4): desktop/tablet com logo + Catálogo, Sobre a Eduáh, campo fino de pesquisa e Carrinho com badge; mobile com logo + botões Menu, Pesquisar e Carrinho (ícone sobre rótulo). Sem mega menu. A Home desktop tem header próprio, como no quadro.
+- Catálogo: página `/catalogo` com filtro por categoria, grid e paginação ("Página X de Y").
+- Pesquisa: página `/busca?q=` com resultados agrupados por categoria, contagem, chips de salto e estado sem resultados. Liga ao campo do header.
 - Modelo de produto:
 ```ts
 export type Categoria = 'aneis' | 'brincos' | 'colares' | 'pulseiras' | 'piercings' | 'linha-masculina';
@@ -117,21 +117,21 @@ Vários pontos abaixo são propostas em aberto, pendentes de conteúdo/decisão 
 - Hero: foto + frase + link/CTA editáveis pela cliente via CMS ("Configurações do site"), não fixos no código — ela pode não ter uma "linha" temática ainda, então o link fica livre (texto), não uma lista fixa de opções.
 - DestaquesTeaser: usa os mesmos produtos com `destaque: true` (não criar um segundo campo). Rótulo "Peças em destaque" — NUNCA "mais vendidos" ou qualquer alegação de venda, pois não há dado real de vendas (checkout é pelo WhatsApp). Mídia (vídeo ou foto) toca sozinha, muda, em loop, sem botão de play, ao entrar na viewport (pausar ao sair) — sem forçar interação do usuário.
 - SiteFooter: campos opcionais (WhatsApp, e-mail, Instagram, TikTok) vindos de "Configurações do site" — renderizar só o que estiver preenchido, nunca um link vazio ou quebrado.
-- NÃO implementar analytics, pixel de rastreamento (Meta/Google) ou banner de cookies sem eu pedir explicitamente — depende de decisão da cliente ainda pendente.
-- NÃO redigir texto de política de privacidade ou aviso legal — isso é conteúdo que vem de mim/da cliente (e revisão jurídica), não algo para o Claude Code gerar.
+- Decidido: SEM banner de cookies e SEM analytics/pixel; só `localStorage` essencial do carrinho.
+- Privacidade e Termos usam o texto que já está nos quadros do design (não redigir texto novo). Campos entre colchetes ficam em `src/config/legal.ts`, visíveis, e revisão jurídica é recomendada antes de publicar.
 
 ## Decisões já tomadas (não reabrir sem eu pedir)
-- Carrinho por presença/ausência: cada peça é única, sem controle de quantidade.
+- Carrinho com seletor de quantidade (Produto e Carrinho), conforme o design.
 - O carrinho NÃO é limpo automaticamente depois de enviar ao WhatsApp.
 - Sem checkout, sem pagamento, sem backend próprio.
 - Categorias: pulseiras, anéis, piercing, brincos, colares, linha masculina. Entre 20 e 25 produtos, catálogo trocado ~1 vez por mês.
 - Preço de cada produto exibido no site.
 
 ## Correções obrigatórias (achados do review do piloto)
-- Guardar no carrinho só o `id` do produto e resolver nome e preço a partir do catálogo atual (evita preço desatualizado quando a cliente muda o catálogo). Se o produto sumiu do catálogo, remover do carrinho.
+- Guardar no carrinho só `id` e `quantidade` do produto e resolver nome e preço a partir do catálogo atual (evita preço desatualizado quando a cliente muda o catálogo). Se o produto sumiu do catálogo, remover do carrinho.
 - Calcular o total em um único lugar.
 - Botão "Enviar" desabilitado deve continuar acessível por teclado (usar `aria-disabled`, não só `disabled`).
-- Drawer do carrinho: fechar com Esc e gerenciar o foco (ao abrir, ao fechar e preso dentro do drawer).
+- Overlay do Menu mobile: fechar com Esc e gerenciar o foco (ao abrir, ao fechar e preso dentro do overlay).
 - Todo `<button>` com `type="button"`.
 - Tipar explicitamente os dados de produtos.
 - Todo `eslint-disable` precisa de comentário justificando.
