@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Carrinho vazio mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&amp;family=Jost:wght@300;400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:'Jost',sans-serif;background:#EFE2D2}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.78}
+.sb::placeholder{color:#D7C6B4;opacity:1}
+.sbw:focus-within{border-bottom-width:2px}
+input::placeholder{color:#5C4A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 976px; box-sizing: border-box; display: flex; flex-direction: column; background: #EFE2D2; color: #32191D; font-family: 'Jost', sans-serif">
+
+<header style="height: 72px; flex-shrink: 0; box-sizing: border-box; padding: 0 8px 0 20px; display: flex; align-items: center; justify-content: space-between; background: #32191D">
+<a href="Mobile.dc.html" aria-label="Eduáh Acessórios — página inicial"><img src="/_blob/6bb43b6062b681b37447daf7366f11b6" alt="Eduáh Acessórios" style="height: 34px; display: block"></a>
+<div style="display: flex; align-items: center">
+<a href="Menu.dc.html" aria-label="Abrir menu" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h16"></path><path d="M4 16h16"></path></svg>Menu</a>
+<a href="Busca.dc.html" aria-label="Pesquisar" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>Pesquisar</a>
+<a href="CarrinhoVazio.dc.html" aria-label="Carrinho, 0 produtos" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Carrinho</a>
+</div>
+</header>
+
+
+<section style="box-sizing: border-box; padding: 32px 20px 0; display: flex; flex-direction: column; gap: 20px">
+<h1 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 34px; line-height: 1.1">Seu carrinho está vazio</h1>
+<p style="margin: 0; font-size: 17px; font-weight: 300; line-height: 1.5; color: #4E3B36">Adicione produtos do catálogo para montar seu pedido. É simples:</p>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; gap: 20px; padding: 14px 20px; box-sizing: border-box; border: 1px solid #B09D8F">
+<div style="font-family: 'Bodoni Moda', serif; font-size: 30px; line-height: 1; color: #481E20; width: 24px">{{s.n}}</div>
+<div style="font-size: 17px">{{s.t}}</div>
+</div>
+</sc-for>
+</div>
+<a href="Catalogo.dc.html" style="display: flex; align-items: center; justify-content: center; height: 54px; box-sizing: border-box; background: #481E20; color: #EFE2D2; font-size: 14px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 2px">Ver catálogo</a>
+</section>
+
+<section style="box-sizing: border-box; padding: 32px 20px 0; display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">Ou comece por uma categoria</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+<a href="Catalogo.dc.html" style="display: flex; align-items: center; height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #32191D; font-size: 15px; border-radius: 2px">{{c}}</a>
+</sc-for>
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":976}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      steps: [
+        { n: '1', t: 'Escolha seus produtos' },
+        { n: '2', t: 'Adicione ao carrinho' },
+        { n: '3', t: 'Envie o pedido pelo WhatsApp' }
+      ],
+      cats: ['Anéis', 'Brincos', 'Colares', 'Pulseiras', 'Piercings', 'Linha masculina']
+    };
+  }
+}
+</script>
+</body>
+</html>

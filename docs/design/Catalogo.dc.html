@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Catálogo mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&amp;family=Jost:wght@300;400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:'Jost',sans-serif;background:#EFE2D2}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.78}
+.sb::placeholder{color:#D7C6B4;opacity:1}
+.sbw:focus-within{border-bottom-width:2px}
+input::placeholder{color:#5C4A45}
+</style>
+</helmet>
+<div style="width: 390px; height: 1576px; box-sizing: border-box; display: flex; flex-direction: column; background: #EFE2D2; color: #32191D; font-family: 'Jost', sans-serif">
+
+<header style="height: 72px; flex-shrink: 0; box-sizing: border-box; padding: 0 8px 0 20px; display: flex; align-items: center; justify-content: space-between; background: #32191D">
+<a href="Mobile.dc.html" aria-label="Eduáh Acessórios — página inicial"><img src="/_blob/6bb43b6062b681b37447daf7366f11b6" alt="Eduáh Acessórios" style="height: 34px; display: block"></a>
+<div style="display: flex; align-items: center">
+<a href="Menu.dc.html" aria-label="Abrir menu" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 8h16"></path><path d="M4 16h16"></path></svg>Menu</a>
+<a href="Busca.dc.html" aria-label="Pesquisar" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>Pesquisar</a>
+<a href="Carrinho.dc.html" aria-label="Carrinho, 0 produtos" style="width: 68px; height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>Carrinho</a>
+</div>
+</header>
+
+
+<section style="box-sizing: border-box; padding: 28px 20px 0; display: flex; flex-direction: column; gap: 16px">
+<h1 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 34px; line-height: 1.1">Catálogo</h1>
+<div style="display: flex; gap: 12px">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<label for="cat" style="font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">Categoria</label>
+<select id="cat" style="height: 48px; box-sizing: border-box; border: 1px solid #32191D; background: #EFE2D2; color: #32191D; font-family: 'Jost', sans-serif; font-size: 16px; padding: 0 12px; border-radius: 2px">
+<option>Todas</option>
+<option>Anéis</option>
+<option>Brincos</option>
+<option>Colares</option>
+<option>Pulseiras</option>
+<option>Piercings</option>
+<option>Linha masculina</option>
+</select>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<label for="ordc" style="font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">Ordenar por</label>
+<select id="ordc" style="height: 48px; box-sizing: border-box; border: 1px solid #32191D; background: #EFE2D2; color: #32191D; font-family: 'Jost', sans-serif; font-size: 16px; padding: 0 12px; border-radius: 2px">
+<option>Mais recentes</option>
+<option>Menor preço</option>
+<option>Maior preço</option>
+</select>
+</div>
+</div>
+<div style="font-size: 14px; color: #4E3B36">Mostrando 1 a 6 de [N] produtos</div>
+</section>
+
+<section style="box-sizing: border-box; padding: 20px 20px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px">
+<sc-for list="{{products}}" as="p" hint-placeholder-count="6">
+<article style="display: flex; flex-direction: column; gap: 4px">
+<div style="height: 200px; background: {{p.tone}}; display: flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px">Foto</div>
+<div style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">{{p.cat}}</div>
+<div style="font-family: 'Bodoni Moda', serif; font-size: 19px; line-height: 1.2">Nome do produto</div>
+<div style="font-size: 16px; font-weight: 500; color: #481E20">R$ 00,00</div>
+<a href="Produto.dc.html" aria-label="Ver produto: Nome do produto" style="margin-top: 8px; display: flex; align-items: center; justify-content: center; height: 44px; box-sizing: border-box; border: 1px solid #32191D; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 2px">Ver produto</a>
+</article>
+</sc-for>
+</section>
+
+<nav aria-label="Páginas do catálogo" style="box-sizing: border-box; padding: 40px 20px 0; display: flex; flex-direction: column; align-items: center; gap: 12px">
+<div style="display: flex; gap: 8px">
+<a href="Catalogo.dc.html" aria-current="page" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: #481E20; color: #EFE2D2; font-size: 16px; font-weight: 500; border-radius: 2px; text-decoration: underline">1</a>
+<a href="Catalogo.dc.html" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 1px solid #32191D; font-size: 16px; border-radius: 2px">2</a>
+<a href="Catalogo.dc.html" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 1px solid #32191D; font-size: 16px; border-radius: 2px">3</a>
+<a href="Catalogo.dc.html" style="width: 48px; height: 48px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 1px solid #32191D; font-size: 16px; border-radius: 2px">4</a>
+</div>
+<div style="font-size: 14px; color: #4E3B36">Página 1 de 4</div>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1576}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = ['#D7C6B4', '#CDBAA6', '#C4B09C', '#D0BFAC'];
+    const c = ['Anéis', 'Brincos', 'Colares', 'Pulseiras', 'Piercings', 'Linha masculina'];
+    return { products: c.map((cat, i) => ({ cat, tone: t[i % 4] })) };
+  }
+}
+</script>
+</body>
+</html>

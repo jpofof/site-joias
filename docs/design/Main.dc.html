@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Home desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&amp;family=Jost:wght@300;400;500&amp;display=swap">
+<style>
+body{margin:0;font-family:'Jost',sans-serif;background:#32191D}
+a{color:inherit;text-decoration:none}
+a:hover{opacity:.78}
+.sb::placeholder{color:#D7C6B4;opacity:1}
+.sbw:focus-within{border-bottom-width:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 5028px; box-sizing: border-box; display: flex; flex-direction: column; background: #32191D; color: #32191D; font-family: 'Jost', sans-serif">
+
+<header style="height: 88px; flex-shrink: 0; box-sizing: border-box; padding: 0 96px; display: flex; align-items: center; justify-content: space-between; background: #32191D">
+<a href="#topo" aria-label="Eduáh Acessórios — página inicial"><img src="/_blob/6bb43b6062b681b37447daf7366f11b6" alt="Eduáh Acessórios" style="height: 48px; display: block"></a>
+<nav style="display: flex; align-items: center; gap: 40px; color: #EFE2D2; font-size: 14px; font-weight: 400; letter-spacing: 0.16em; text-transform: uppercase">
+<a href="CatalogoDesk.dc.html">Catálogo</a>
+<a href="#sobre">Sobre a Eduáh</a>
+<div style="display: flex">
+<div class="sbw" style="flex: 1 1 200px; max-width: 200px; min-width: 0; display: flex; align-items: center; gap: 4px; height: 44px; box-sizing: border-box; border-bottom: 1px solid #EFE2D2"><a href="BuscaDesk.dc.html" aria-label="Pesquisar" style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-left: -10px; color: #EFE2D2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg></a><input class="sb" type="search" placeholder="Pesquisar" aria-label="Pesquisar no catálogo" style="flex: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 0; padding: 0; background: transparent; color: #EFE2D2; font-family: 'Jost', sans-serif; font-size: 16px; font-weight: 500; letter-spacing: 0; text-transform: none; outline: none"></div>
+</div>
+<a href="CarrinhoVazioDesk.dc.html" style="display: flex; align-items: center; gap: 10px">Carrinho <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; box-sizing: border-box; border: 1px solid #B09D8F; border-radius: 12px; font-size: 12px; letter-spacing: 0">0</span></a>
+</nav>
+</header>
+
+<sc-if value="{{isHib}}" hint-placeholder-val="{{true}}">
+
+</sc-if>
+
+<sc-if value="{{isInst}}" hint-placeholder-val="{{false}}">
+<section id="topo2" style="height: 700px; flex-shrink: 0; box-sizing: border-box; padding: 64px 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; background: #481E20; text-align: center">
+<img src="/_blob/6bb43b6062b681b37447daf7366f11b6" alt="Eduáh Acessórios" style="width: 440px; display: block">
+<p style="margin: 0; max-width: 560px; font-family: 'Bodoni Moda', serif; font-size: 38px; line-height: 1.2; color: #EFE2D2">O detalhe que completa o seu brilho</p>
+<a href="#catalogo" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 36px; background: #EFE2D2; color: #32191D; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver catálogo</a>
+</section>
+</sc-if>
+
+<sc-if value="{{isProd}}" hint-placeholder-val="{{false}}">
+<section id="topo3" style="height: 700px; flex-shrink: 0; display: flex; background: #481E20">
+<div style="width: 640px; box-sizing: border-box; padding: 64px 96px; display: flex; flex-direction: column; justify-content: center; gap: 28px">
+<h1 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 64px; line-height: 1.04; color: #EFE2D2">Descubra nosso catálogo</h1>
+<a href="#catalogo" style="align-self: flex-start; display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 36px; background: #EFE2D2; color: #32191D; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver catálogo</a>
+</div>
+<div style="flex-grow: 1; background: #D7C6B4; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D">Foto de produto em destaque<br>[uma joia, fundo neutro]</div>
+</section>
+</sc-if>
+
+<section id="topo" style="height: 700px; flex-shrink: 0; box-sizing: border-box; padding: 64px 96px; display: flex; align-items: center; justify-content: space-between; background: #EFE2D2">
+<div style="width: 600px; display: flex; flex-direction: column; gap: 28px">
+<div style="font-size: 13px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #4E3B36">Eduáh Acessórios</div>
+<h1 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 76px; line-height: 1.02; letter-spacing: -0.01em; color: #32191D">O detalhe que completa o seu brilho</h1>
+<p style="margin: 0; max-width: 480px; font-size: 20px; font-weight: 300; line-height: 1.5; color: #4E3B36">Anéis, brincos, colares, pulseiras e piercings. Escolha seus produtos, monte o carrinho e finalize pelo WhatsApp.</p>
+<div style="display: flex; gap: 16px; margin-top: 8px">
+<a href="#catalogo" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 36px; background: #481E20; color: #EFE2D2; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver catálogo</a>
+<a href="#sobre" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 36px; border: 1px solid #32191D; color: #32191D; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Sobre a Eduáh</a>
+</div>
+</div>
+<div style="width: 500px; height: 572px; box-sizing: border-box; border-radius: 250px 250px 0 0; background: #D7C6B4; display: flex; align-items: center; justify-content: center; text-align: center; padding: 32px; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D">Foto de destaque<br>[joia em uso]</div>
+</section><section id="catalogo" style="height: 1040px; flex-shrink: 0; box-sizing: border-box; padding: 80px 96px; display: flex; flex-direction: column; align-items: center; gap: 48px; background: #D7C6B4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<div style="font-size: 13px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #32191D">Catálogo</div>
+<h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 52px; line-height: 1.1; color: #32191D">Encontre seu produto</h2>
+</div>
+<div style="width: 1248px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+<a href="{{c.href}}" style="height: 280px; box-sizing: border-box; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; background: {{c.tone}}; color: #32191D">
+<span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D">Foto da categoria</span>
+<span style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-family: 'Bodoni Moda', serif; font-size: 32px; line-height: 1.1">{{c.name}}</span><span style="font-size: 13px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase">Ver →</span></span>
+</a>
+</sc-for>
+</div>
+<a href="CatalogoDesk.dc.html" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 40px; background: #481E20; color: #EFE2D2; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver catálogo</a>
+</section>
+
+<section id="destaques" style="height: 780px; flex-shrink: 0; box-sizing: border-box; padding: 80px 96px; display: flex; flex-direction: column; gap: 48px; background: #EFE2D2">
+<div style="display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 13px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #4E3B36">Seleção da Duda</div>
+<h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 52px; line-height: 1.1; color: #32191D">Destaques da marca</h2>
+</div>
+<a href="CatalogoDesk.dc.html" style="font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid #32191D; padding-bottom: 6px">Ver catálogo →</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+<sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+<article style="display: flex; flex-direction: column; gap: 6px">
+<div style="height: 300px; box-sizing: border-box; background: {{p.tone}}; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D; margin-bottom: 10px">Foto do produto</div>
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">{{p.cat}}</div>
+<div style="font-family: 'Bodoni Moda', serif; font-size: 24px; line-height: 1.2; color: #32191D">Nome do produto</div>
+<div style="font-size: 18px; font-weight: 500; color: #481E20">R$ 00,00</div>
+<a href="ProdutoDesk.dc.html" style="margin-top: 10px; display: flex; align-items: center; justify-content: center; height: 48px; box-sizing: border-box; border: 1px solid #32191D; font-size: 13px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver produto</a>
+</article>
+</sc-for>
+</div>
+</section>
+
+<section id="novidades" style="height: 780px; flex-shrink: 0; box-sizing: border-box; padding: 80px 96px; display: flex; flex-direction: column; gap: 48px; background: #E3D3C2">
+<div style="display: flex; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 13px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #4E3B36">Acabou de chegar</div>
+<h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 52px; line-height: 1.1; color: #32191D">Novidades</h2>
+</div>
+<a href="CatalogoDesk.dc.html" style="font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid #32191D; padding-bottom: 6px">Ver novidades →</a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+<sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+<article style="display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 300px; box-sizing: border-box; background: {{p.tone}}; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D; margin-bottom: 10px"><span style="position: absolute; top: 14px; left: 14px; padding: 5px 10px; background: #481E20; color: #EFE2D2; font-size: 11px; font-weight: 500; letter-spacing: 0.16em">NOVO</span>Foto do produto</div>
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #4E3B36">{{p.cat}}</div>
+<div style="font-family: 'Bodoni Moda', serif; font-size: 24px; line-height: 1.2; color: #32191D">Nome do produto</div>
+<div style="font-size: 18px; font-weight: 500; color: #481E20">R$ 00,00</div>
+<a href="ProdutoDesk.dc.html" style="margin-top: 10px; display: flex; align-items: center; justify-content: center; height: 48px; box-sizing: border-box; border: 1px solid #32191D; font-size: 13px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Ver produto</a>
+</article>
+</sc-for>
+</div>
+</section>
+
+<section id="sobre" style="height: 720px; flex-shrink: 0; box-sizing: border-box; padding: 96px; display: flex; align-items: center; gap: 96px; background: #481E20; color: #EFE2D2">
+<div style="width: 528px; height: 528px; flex-shrink: 0; box-sizing: border-box; background: #B09D8F; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: #32191D">Foto da Duda<br>[ou do ateliê]</div>
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div style="font-size: 13px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D7C6B4">Sobre a Eduáh</div>
+<h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 52px; line-height: 1.1; color: #EFE2D2">[Frase de posicionamento da marca]</h2>
+<p style="margin: 0; max-width: 560px; font-size: 19px; font-weight: 300; line-height: 1.6; color: #EFE2D2">[Texto da Duda: quem ela é, como os produtos são escolhidos, o que a marca valoriza. Duas ou três frases bastam.]</p>
+<a href="#sobre-completo" style="align-self: flex-start; margin-top: 8px; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid #EFE2D2; padding-bottom: 6px">Sobre a Eduáh →</a>
+</div>
+</section>
+
+<section id="pedido" style="height: 520px; flex-shrink: 0; box-sizing: border-box; padding: 80px 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; background: #EFE2D2; text-align: center">
+<h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 52px; line-height: 1.1; color: #32191D">Encontrou o produto certo?</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; width: 1000px">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px">
+<div style="font-family: 'Bodoni Moda', serif; font-size: 40px; line-height: 1; color: #481E20">{{s.n}}</div>
+<div style="font-size: 18px; font-weight: 400; color: #32191D">{{s.t}}</div>
+</div>
+</sc-for>
+</div>
+<a href="#whatsapp" style="display: inline-flex; align-items: center; height: 56px; box-sizing: border-box; padding: 0 40px; background: #481E20; color: #EFE2D2; font-size: 14px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; border-radius: 2px">Falar no WhatsApp</a>
+</section>
+
+<footer style="height: 400px; flex-shrink: 0; box-sizing: border-box; padding: 72px 96px 40px; display: flex; flex-direction: column; justify-content: space-between; background: #32191D; color: #EFE2D2">
+<div style="display: flex; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 20px; width: 320px">
+<img src="/_blob/6bb43b6062b681b37447daf7366f11b6" alt="Eduáh Acessórios" style="width: 200px; display: block">
+<p style="margin: 0; font-size: 16px; font-weight: 300; line-height: 1.5; color: #D7C6B4">[Frase curta da marca]</p>
+</div>
+<div style="display: flex; gap: 96px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D7C6B4; margin-bottom: 4px">Catálogo</div>
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+<a href="{{c.href}}" style="font-size: 16px; font-weight: 300">{{c.name}}</a>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D7C6B4; margin-bottom: 4px">Loja</div>
+<a href="#pesquisa" style="font-size: 16px; font-weight: 300">Pesquisa</a>
+<a href="#sobre" style="font-size: 16px; font-weight: 300">Sobre</a>
+<a href="CarrinhoVazioDesk.dc.html" style="font-size: 16px; font-weight: 300">Carrinho</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #D7C6B4; margin-bottom: 4px">Contato</div>
+<a href="#whatsapp" style="font-size: 16px; font-weight: 300">WhatsApp [número]</a>
+<a href="#instagram" style="font-size: 16px; font-weight: 300">Instagram [@perfil]</a>
+</div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; padding-top: 24px; border-top: 1px solid #481E20; font-size: 13px; font-weight: 300; color: #D7C6B4">
+<span>© Eduáh Acessórios</span>
+<span style="display: flex; align-items: center; gap: 8px"><a href="Privacidade.dc.html" style="display: flex; align-items: center; height: 44px; text-decoration: underline">Política de privacidade</a>·<a href="Termos.dc.html" style="display: flex; align-items: center; height: 44px; text-decoration: underline">Termos de uso</a></span>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"heroVariant":{"editor":"enum","default":"hibrido","options":["hibrido","institucional","produto"],"section":"Hero"},"$preview":{"width":1440,"height":5028}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const v = this.props.heroVariant ?? 'hibrido';
+    const tones = ['#D7C6B4', '#CDBAA6', '#C4B09C', '#D0BFAC'];
+    return {
+      isHib: v === 'hibrido',
+      isInst: v === 'institucional',
+      isProd: v === 'produto',
+      cats: [
+        { name: 'Anéis', href: '#aneis', tone: '#E3D3C2' },
+        { name: 'Brincos', href: '#brincos', tone: '#EFE2D2' },
+        { name: 'Colares', href: '#colares', tone: '#E3D3C2' },
+        { name: 'Pulseiras', href: '#pulseiras', tone: '#EFE2D2' },
+        { name: 'Piercings', href: '#piercings', tone: '#E3D3C2' },
+        { name: 'Linha masculina', href: '#masculina', tone: '#EFE2D2' }
+      ],
+      products: ['Anéis', 'Brincos', 'Colares', 'Pulseiras'].map((cat, i) => ({ cat, tone: tones[i] })),
+      steps: [
+        { n: '1', t: 'Escolha seus produtos' },
+        { n: '2', t: 'Monte o carrinho' },
+        { n: '3', t: 'Finalize pelo WhatsApp' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
