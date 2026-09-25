@@ -32,6 +32,17 @@
   --font-display: "Bodoni Moda", serif; /* títulos e preços, 400/500 */
   --font-sans: "Jost", sans-serif; /* corpo e UI, 300/400/500 */
   --radius-btn: 2px;
+
+  /* Os quadros usam line-height: normal (exceto onde definem leading); os tamanhos nomeados não impõem outro. */
+  --text-xs--line-height: normal;
+  --text-sm--line-height: normal;
+  --text-base--line-height: normal;
+  --text-lg--line-height: normal;
+  --text-xl--line-height: normal;
+  --text-2xl--line-height: normal;
+  --text-3xl--line-height: normal;
+  --text-4xl--line-height: normal;
+  --text-5xl--line-height: normal;
 }
 
 /* Padding lateral do design: 20px (mobile) / 48px (md) / 96px (lg), conteúdo até 1248px. */
@@ -48,6 +59,11 @@
 }
 
 @layer base {
+  html,
+  body {
+    line-height: normal;
+  }
+
   body {
     margin: 0;
     background-color: var(--color-silk);
