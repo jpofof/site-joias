@@ -1,7 +1,39 @@
+import CategoryTiles from '../components/CategoryTiles'
+import Hero from '../components/Hero'
+import PassosPedido from '../components/PassosPedido'
+import ProductShowcase from '../components/ProductShowcase'
+import SobreHome from '../components/SobreHome'
+import { produtos } from '../data/produtos'
+
+// Na Home, a ordem do array é "mais recentes primeiro": Novidades são os 4 primeiros
+// e os Destaques são os 4 primeiros com destaque: true.
+const destaques = produtos.filter((p) => p.destaque).slice(0, 4)
+const novidades = produtos.slice(0, 4)
+
 export default function Home() {
   return (
-    <main className="site-container py-10">
-      <h1 className="font-display text-4xl">Home</h1>
+    <main>
+      <Hero />
+      <CategoryTiles />
+      <ProductShowcase
+        eyebrow="Seleção da Duda"
+        titulo="Destaques da marca"
+        produtos={destaques}
+        fundo="bg-silk"
+        linkDesktop="Ver catálogo"
+        linkTablet="Ver catálogo"
+      />
+      <ProductShowcase
+        eyebrow="Acabou de chegar"
+        titulo="Novidades"
+        produtos={novidades}
+        fundo="bg-oat-1"
+        linkDesktop="Ver novidades"
+        linkTablet="Ver catálogo"
+        novos
+      />
+      <SobreHome />
+      <PassosPedido />
     </main>
   )
 }

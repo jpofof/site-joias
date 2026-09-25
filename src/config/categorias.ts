@@ -14,3 +14,5 @@ export const categorias: CategoriaInfo[] = [
 
 // O filtro por categoria é lido pelo Catálogo no bloco 2 (feat/vitrine).
 export const urlCategoria = (slug: Categoria) => `/catalogo?categoria=${slug}`
+
+export const nomeDaCategoria = (slug: Categoria) => categorias.find((c) => c.slug === slug)?.nome ?? slug
