@@ -1,1 +1,72 @@
 @import "tailwindcss" source("../src");
+
+@font-face {
+  font-family: "Bodoni Moda";
+  src: url("/fonts/bodoni-moda-latin.woff2") format("woff2");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Jost";
+  src: url("/fonts/jost-latin.woff2") format("woff2");
+  font-weight: 300 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-silk: #efe2d2; /* fundo (Vanilla Silk) */
+  --color-oat: #d7c6b4; /* superfícies (Alpine Oat) */
+  --color-oat-1: #e3d3c2;
+  --color-oat-2: #d0bfac;
+  --color-oat-3: #cdbaa6;
+  --color-oat-4: #c4b09c;
+  --color-greige: #b09d8f; /* só bordas/detalhes, nunca texto */
+  --color-cherry: #481e20; /* ações (Cherry Velvet) */
+  --color-noir: #32191d; /* texto, header, footer (Bordeaux Noir) */
+  --color-ink-2: #4e3b36; /* texto secundário */
+  --color-placeholder: #5c4a45;
+
+  --font-display: "Bodoni Moda", serif; /* títulos e preços, 400/500 */
+  --font-sans: "Jost", sans-serif; /* corpo e UI, 300/400/500 */
+  --radius-btn: 2px;
+}
+
+/* Padding lateral do design: 20px (mobile) / 48px (md) / 96px (lg), conteúdo até 1248px. */
+@utility site-container {
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-inline: 20px;
+  @media (width >= 48rem) {
+    padding-inline: 48px;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 96px;
+  }
+}
+
+@layer base {
+  body {
+    margin: 0;
+    background-color: var(--color-silk);
+    color: var(--color-noir);
+    font-family: var(--font-sans);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    opacity: 0.78;
+  }
+
+  /* currentColor: o anel segue a cor do texto, então serve em fundo claro e no header/footer escuros. */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
