@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import CategoryFilter from '../components/CategoryFilter'
+import PaginaMeta from '../components/PaginaMeta'
 import ProductGrid from '../components/ProductGrid'
 import { produtos } from '../data/produtos'
 import { useTamanhoPagina } from '../hooks/useTamanhoPagina'
@@ -46,6 +47,7 @@ export default function Catalogo() {
 
   return (
     <main className="site-container pb-14 md:pb-16 lg:pb-[72px]">
+      <PaginaMeta titulo="Catálogo" descricao="Veja as peças da Eduáh por categoria e ordene por preço ou novidade." />
       <section className="flex flex-col gap-4 pt-7 md:gap-5 md:pt-5 lg:gap-6 lg:pt-8">
         <nav aria-label="Caminho" className="hidden items-center gap-3 pt-3 text-sm text-ink-2 md:flex">
           <Link to="/" className={linkMigalha}>

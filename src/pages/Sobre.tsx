@@ -9,6 +9,7 @@ export default function Sobre() {
   return (
     <PaginaTexto
       titulo="Sobre a Eduáh"
+      descricao="Conheça a Eduáh Acessórios."
       atual="Sobre a Eduáh"
       subtitulo={frase && <p className="mt-0 text-lg leading-normal font-light text-ink-2">{frase}</p>}
     >

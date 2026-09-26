@@ -1,10 +1,13 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import PaginaMeta from './PaginaMeta'
 
 export type ItemIndice = { id: string; titulo: string }
 
 type Props = {
   titulo: string
+  /** Descrição da página para buscadores (<meta name="description">). */
+  descricao: string
   /** Nome da página no caminho "Início / …" (não aparece no mobile, como no quadro). */
   atual: string
   /** Linha abaixo do título (ex.: "Última atualização"). */
@@ -35,7 +38,7 @@ export function SecaoTexto({ id, titulo, children }: { id: string; titulo: strin
 }
 
 // Layout das páginas de texto (Privacidade, Termos, Sobre): caminho, título, "Nesta página" e seções.
-export default function PaginaTexto({ titulo, atual, subtitulo, indice, linkExtra, children }: Props) {
+export default function PaginaTexto({ titulo, descricao, atual, subtitulo, indice, linkExtra, children }: Props) {
   const navigate = useNavigate()
   const hashInicial = useRef(useLocation().hash)
 
@@ -55,6 +58,7 @@ export default function PaginaTexto({ titulo, atual, subtitulo, indice, linkExtr
 
   return (
     <main className="site-container">
+      <PaginaMeta titulo={titulo} descricao={descricao} />
       <section className="pt-5 md:flex md:flex-col md:gap-3 lg:block lg:pt-8">
         <nav aria-label="Caminho" className="hidden items-center gap-3 pt-3 text-sm text-ink-2 md:flex">
           <Link to="/" className="-mx-1.5 flex h-11 items-center px-1.5 underline underline-offset-[3px]">

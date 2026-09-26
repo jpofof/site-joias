@@ -1,5 +1,6 @@
 import CategoryTiles from '../components/CategoryTiles'
 import Hero from '../components/Hero'
+import PaginaMeta from '../components/PaginaMeta'
 import PassosPedido from '../components/PassosPedido'
 import ProductShowcase from '../components/ProductShowcase'
 import SobreHome from '../components/SobreHome'
@@ -13,6 +14,7 @@ const novidades = produtos.slice(0, 4)
 export default function Home() {
   return (
     <main>
+      <PaginaMeta descricao="Joias e acessórios da Eduáh: anéis, brincos, colares, pulseiras, piercings e linha masculina. Monte o carrinho e envie o pedido pelo WhatsApp." />
       <Hero />
       <CategoryTiles />
       <ProductShowcase

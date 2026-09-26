@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ProductGrid from '../components/ProductGrid'
+import PaginaMeta from '../components/PaginaMeta'
 import { nomeDaCategoria, urlCategoria } from '../config/categorias'
 import { produtos } from '../data/produtos'
 import { useCart } from '../hooks/useCart'
@@ -72,6 +73,10 @@ function PaginaProduto({ id }: { id?: string }) {
 
   return (
     <main className="site-container">
+      <PaginaMeta
+        titulo={produto.nome}
+        descricao={produto.descricao || `${produto.nome}, da categoria ${categoria}. Veja os detalhes e adicione ao carrinho.`}
+      />
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {anuncio}
       </div>

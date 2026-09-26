@@ -5,6 +5,7 @@ import PaginaTexto, { SecaoTexto } from './PaginaTexto'
 
 type Props = {
   titulo: string
+  descricao: string
   /** Data da última revisão (AAAA-MM-DD) vinda de src/config/legal.ts. */
   atualizadoEm: string
   secoes: SecaoLegal[]
@@ -26,12 +27,13 @@ function comCampos(texto: string) {
   })
 }
 
-export default function PaginaLegal({ titulo, atualizadoEm, secoes, linkExtra }: Props) {
+export default function PaginaLegal({ titulo, descricao, atualizadoEm, secoes, linkExtra }: Props) {
   const data = formatarData(atualizadoEm)
 
   return (
     <PaginaTexto
       titulo={titulo}
+      descricao={descricao}
       atual={titulo}
       subtitulo={
         <div className="text-sm text-ink-2">

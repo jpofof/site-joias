@@ -1,5 +1,6 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import OrderSteps from '../components/OrderSteps'
+import PaginaMeta from '../components/PaginaMeta'
 import { whatsappAtivo } from '../config/site'
 import { useCart } from '../hooks/useCart'
 import { montarMensagemPedido, rotuloProdutos, urlWhatsApp } from '../lib/carrinho'
@@ -20,6 +21,7 @@ export default function Pedido() {
 
   return (
     <main className="site-container">
+      <PaginaMeta titulo="Pedido preparado" descricao="Seu pedido está pronto para ser enviado pelo WhatsApp." />
       <meta name="robots" content="noindex" />
       <section className="flex flex-col gap-8 pt-8 pb-14 md:gap-6 md:pt-5 md:pb-16 lg:gap-10 lg:pt-8 lg:pb-24">
         <nav aria-label="Caminho" className="hidden items-center gap-3 pt-3 text-sm text-ink-2 md:flex">

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import type { LayoutContext } from '../components/Layout'
+import PaginaMeta from '../components/PaginaMeta'
 import ProductGrid from '../components/ProductGrid'
 import { urlCategoria } from '../config/categorias'
 import { produtos } from '../data/produtos'
@@ -75,11 +76,19 @@ export default function Busca() {
     </div>
   )
 
+  const meta = (
+    <PaginaMeta
+      titulo={termo ? `Pesquisa: ${termo}` : 'Pesquisa'}
+      descricao="Resultados da pesquisa nas peças da Eduáh, agrupados por categoria."
+    />
+  )
+
   // Sem termo ou sem resultados: só o convite / a mensagem, sem chips nem grupos.
   if (!termo || total === 0) {
     const semTermo = !termo
     return (
       <main className="site-container pb-14 md:pb-16 lg:pb-[72px]">
+        {meta}
         {anunciador}
         <section className="flex flex-col gap-3 pt-7 md:gap-3.5 md:pt-5 lg:max-w-[640px] lg:gap-4 lg:pt-8 md:max-w-[560px]">
           {migalha}
@@ -113,6 +122,7 @@ export default function Busca() {
 
   return (
     <main className="site-container pb-14 md:pb-16 lg:pb-[72px]">
+      {meta}
       {anunciador}
       <section className="flex flex-col gap-4 pt-7 md:gap-5 md:pt-5 lg:gap-6 lg:pt-8">
         {migalha}
