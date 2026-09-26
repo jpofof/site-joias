@@ -1,0 +1,26 @@
+# Deploy no Netlify. Os redirects ficam só em public/_redirects (rotas do lado do cliente).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # O Vite 8 exige Node ^20.19.0 ou >=22.12.0.
+  NODE_VERSION = "22"
+
+# HTML (e as rotas que caem no index.html) sempre revalidado; os arquivos com hash abaixo sobrescrevem este valor.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# Arquivos gerados pelo Vite têm hash no nome e nunca mudam.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
