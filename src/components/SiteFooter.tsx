@@ -45,7 +45,7 @@ export default function SiteFooter({ home = false }: { home?: boolean }) {
               home ? 'lg:w-[320px] lg:gap-5' : 'lg:w-[300px] lg:gap-4'
             }`}
           >
-            <img src="/logo-eduah.png" alt={site.nome} className="block w-[150px] md:w-[170px] lg:w-[200px]" />
+            <img src="/logo-eduah.png" alt={site.nome} width={400} height={154} className="block w-[150px] md:w-[170px] lg:w-[200px]" />
             {fraseMarca && (
               <p className={`text-[15px] leading-normal font-light text-oat ${home ? 'lg:text-base' : ''}`}>{fraseMarca}</p>
             )}

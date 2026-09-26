@@ -33,7 +33,7 @@ export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quan
           aria-label={`${site.nome}, página inicial`}
           className={`block -my-[5px] py-[5px] md:-my-1 md:py-1 ${home ? 'lg:my-0 lg:py-0' : 'lg:-my-0.5 lg:py-0.5'}`}
         >
-          <img src="/logo-eduah.png" alt={site.nome} className={`block h-[34px] w-auto md:h-9 ${home ? 'lg:h-12' : 'lg:h-10'}`} />
+          <img src="/logo-eduah.png" alt={site.nome} width={400} height={154} className={`block h-[34px] w-auto md:h-9 ${home ? 'lg:h-12' : 'lg:h-10'}`} />
         </Link>
 
         <nav aria-label="Principal">
