@@ -5,6 +5,17 @@ export type SobreHome = {
   foto: string
 }
 
+export type SobrePagina = {
+  /** Frase abaixo do título (opcional). */
+  frase: string
+  /** Parágrafos do texto. A página só mostra o conteúdo quando há pelo menos um. */
+  paragrafos: string[]
+  /** Caminho da foto. Vazio = sem foto. */
+  foto: string
+  /** Descrição da foto para leitor de tela. */
+  fotoAlt: string
+}
+
 export type SiteConfig = {
   nome: string
   /** Frase da marca exibida no footer. Vazio = ainda não informada. */
@@ -15,9 +26,11 @@ export type SiteConfig = {
   instagram: string
   /** Seção "Sobre a Eduáh" da Home. Só aparece com frase e texto preenchidos. */
   sobreHome: SobreHome
+  /** Página /sobre. Vazia, mostra "Conteúdo em preparação.". */
+  sobre: SobrePagina
 }
 
-// PENDENTE (cliente): frase da marca, número do WhatsApp (chip novo), Instagram e o texto da seção Sobre da Home.
+// PENDENTE (cliente): frase da marca, número do WhatsApp (chip novo), Instagram e os textos de Sobre (Home e página /sobre).
 // Único lugar de configuração. Campos vazios não são exibidos (footer, botão "Falar no WhatsApp", seção Sobre)
 // e o envio do pedido fica desabilitado sem número.
 export const site: SiteConfig = {
@@ -26,6 +39,7 @@ export const site: SiteConfig = {
   whatsapp: '',
   instagram: '',
   sobreHome: { frase: '', texto: '', foto: '' },
+  sobre: { frase: '', paragrafos: [], foto: '', fotoAlt: '' },
 }
 
 /**

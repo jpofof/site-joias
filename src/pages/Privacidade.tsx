@@ -1,7 +1,14 @@
+import PaginaLegal from '../components/PaginaLegal'
+import { legal } from '../config/legal'
+import { secoesPrivacidade } from '../content/privacidade'
+
 export default function Privacidade() {
   return (
-    <main className="site-container py-10">
-      <h1 className="font-display text-4xl">Política de privacidade</h1>
-    </main>
+    <PaginaLegal
+      titulo="Política de privacidade"
+      atualizadoEm={legal.privacidadeAtualizadaEm}
+      secoes={secoesPrivacidade}
+      linkExtra={{ para: '/termos', texto: 'Ler os Termos de uso' }}
+    />
   )
 }

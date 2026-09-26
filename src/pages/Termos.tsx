@@ -1,7 +1,14 @@
+import PaginaLegal from '../components/PaginaLegal'
+import { legal } from '../config/legal'
+import { secoesTermos } from '../content/termos'
+
 export default function Termos() {
   return (
-    <main className="site-container py-10">
-      <h1 className="font-display text-4xl">Termos de uso</h1>
-    </main>
+    <PaginaLegal
+      titulo="Termos de uso"
+      atualizadoEm={legal.termosAtualizadosEm}
+      secoes={secoesTermos}
+      linkExtra={{ para: '/privacidade', texto: 'Ler a Política de privacidade' }}
+    />
   )
 }
