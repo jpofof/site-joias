@@ -52,6 +52,7 @@ Tudo é preenchido em arquivos de configuração; nenhum precisa de mudança em 
 - **`src/config/legal.ts`**: dados do responsável, CPF/CNPJ, e-mail, provedor de hospedagem, prazos, foro, política de trocas e datas de atualização. Enquanto vazios, aparecem entre colchetes, destacados, nas páginas `/privacidade` e `/termos`. Recomendada revisão jurídica antes de publicar.
 - **`src/data/produtos/index.ts`**: 24 produtos de **exemplo** (nomes, preços, descrições). A ordem do array é "mais recentes primeiro". Os produtos reais virão do Decap CMS.
 - **Fotos**: os campos de imagem estão vazios e o site mostra placeholders nos tons da paleta.
+- **Lançamento**: Remover o bloqueio de indexação (robots.txt e X-Robots-Tag) e conferir o robots.txt no ar.
 
 ## Ainda não implementado
 

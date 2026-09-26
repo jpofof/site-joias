@@ -1,2 +1,3 @@
+# TEMPORÁRIO: remover no lançamento
 User-agent: *
-Allow: /
+Disallow: /
