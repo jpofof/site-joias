@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { Produto } from '../types/produto'
 import ProductCard, { type VarianteCard } from './ProductCard'
 
@@ -6,15 +7,18 @@ type Props = {
   variante?: VarianteCard
   /** Marca todos os cards com o selo NOVO (seção Novidades). */
   novos?: boolean
+  /** Célula extra ao final da grade (ex.: "Ver todos" da Busca no desktop). */
+  children?: ReactNode
 }
 
 const grades: Record<VarianteCard, string> = {
   catalogo: 'grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 md:gap-x-5 md:gap-y-10 lg:grid-cols-4 lg:gap-x-6',
   destaque: 'grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6',
   relacionado: 'grid-cols-3 gap-5 lg:grid-cols-4 lg:gap-6',
+  busca: 'grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 lg:gap-6',
 }
 
-export default function ProductGrid({ produtos, variante = 'catalogo', novos = false }: Props) {
+export default function ProductGrid({ produtos, variante = 'catalogo', novos = false, children }: Props) {
   return (
     <div className={`grid ${grades[variante]}`}>
       {produtos.map((p, i) => (
@@ -27,6 +31,7 @@ export default function ProductGrid({ produtos, variante = 'catalogo', novos = f
           className={variante === 'destaque' && i === 3 ? 'md:max-lg:hidden' : ''}
         />
       ))}
+      {children}
     </div>
   )
 }

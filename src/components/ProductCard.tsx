@@ -4,7 +4,7 @@ import { formatarPreco } from '../lib/preco'
 import { tomPlaceholder } from '../lib/placeholder'
 import type { Produto } from '../types/produto'
 
-export type VarianteCard = 'catalogo' | 'destaque' | 'relacionado'
+export type VarianteCard = 'catalogo' | 'destaque' | 'relacionado' | 'busca'
 
 type Props = {
   produto: Produto
@@ -40,6 +40,14 @@ const estilos: Record<VarianteCard, { card: string; foto: string; categoria: str
     preco: 'text-[17px]',
     botao: 'h-12 text-[13px] tracking-[0.14em]',
   },
+  busca: {
+    card: 'gap-1',
+    foto: 'h-[180px] md:h-[220px] lg:h-[280px]',
+    categoria: '',
+    nome: 'text-[19px] md:text-xl lg:text-[22px]',
+    preco: 'text-base md:text-[17px]',
+    botao: 'h-11 text-xs tracking-[0.14em] md:h-12 md:text-[13px]',
+  },
 }
 
 export default function ProductCard({ produto, variante = 'catalogo', novo = false, className = '' }: Props) {
@@ -63,7 +71,7 @@ export default function ProductCard({ produto, variante = 'catalogo', novo = fal
           </span>
         )}
       </div>
-      {variante !== 'relacionado' && (
+      {e.categoria && (
         <div className={`font-medium tracking-[0.18em] text-ink-2 uppercase ${e.categoria}`}>
           {nomeDaCategoria(produto.categoria)}
         </div>

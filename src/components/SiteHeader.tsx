@@ -1,11 +1,7 @@
-import { useCallback, useRef, useState, type FormEvent } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { site } from '../config/site'
 import { CartIcon, MenuIcon, SearchIcon } from './icons'
-import MenuMobile from './MenuMobile'
-
-// Substituído pela contagem real do carrinho no bloco 4 (feat/carrinho).
-const quantidadeCarrinho = 0 as number
+import SearchField from './SearchField'
 
 const botaoMobile =
   'flex h-14 w-17 flex-col items-center justify-center gap-[3px] text-[11px] font-medium tracking-[0.06em] text-silk uppercase'
@@ -14,28 +10,19 @@ const linkNav = 'flex h-12 items-center px-3 text-[15px] font-medium text-silk'
 const linkNavHome = 'lg:px-0 lg:text-sm lg:font-normal lg:tracking-[0.16em] lg:uppercase'
 const linkNavPadrao = 'lg:px-4'
 
-export default function SiteHeader({ home = false }: { home?: boolean }) {
-  const [menuAberto, setMenuAberto] = useState(false)
-  const [busca, setBusca] = useState('')
-  const botaoMenuRef = useRef<HTMLButtonElement>(null)
-  const navigate = useNavigate()
+type Props = {
+  home?: boolean
+  menuAberto: boolean
+  onAbrirMenu: (origem: HTMLElement) => void
+  quantidadeCarrinho: number
+}
 
-  const fecharMenu = useCallback(() => {
-    setMenuAberto(false)
-    botaoMenuRef.current?.focus()
-  }, [])
-
-  const termo = busca.trim()
-  const urlBusca = termo ? `/busca?q=${encodeURIComponent(termo)}` : '/busca'
+export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quantidadeCarrinho }: Props) {
+  const naBusca = useLocation().pathname === '/busca'
   const rotuloCarrinho = `Carrinho, ${quantidadeCarrinho} ${quantidadeCarrinho === 1 ? 'produto' : 'produtos'}`
 
   const classeNavLink = ({ isActive }: { isActive: boolean }) =>
     `${linkNav} ${home ? linkNavHome : linkNavPadrao} ${isActive ? 'underline underline-offset-8' : ''}`
-
-  function buscar(e: FormEvent) {
-    e.preventDefault()
-    navigate(urlBusca)
-  }
 
   return (
     <header className="bg-noir">
@@ -47,9 +34,8 @@ export default function SiteHeader({ home = false }: { home?: boolean }) {
         <nav aria-label="Principal">
           <div className="flex items-center md:hidden">
             <button
-              ref={botaoMenuRef}
               type="button"
-              onClick={() => setMenuAberto(true)}
+              onClick={(e) => onAbrirMenu(e.currentTarget)}
               aria-haspopup="dialog"
               aria-expanded={menuAberto}
               aria-label="Abrir menu"
@@ -76,25 +62,7 @@ export default function SiteHeader({ home = false }: { home?: boolean }) {
               Sobre a Eduáh
             </NavLink>
 
-            <form
-              role="search"
-              onSubmit={buscar}
-              className={`mr-3 ml-4 flex h-11 w-[140px] items-center gap-1 border-b border-silk focus-within:border-b-2 lg:w-[200px] ${
-                home ? 'lg:mx-0' : 'lg:mr-4'
-              }`}
-            >
-              <Link to={urlBusca} aria-label="Pesquisar" className="-ml-2.5 flex size-11 shrink-0 items-center justify-center text-silk">
-                <SearchIcon strokeWidth={1.7} />
-              </Link>
-              <input
-                type="search"
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                placeholder="Pesquisar"
-                aria-label="Pesquisar no catálogo"
-                className="h-11 min-w-0 flex-1 border-0 bg-transparent p-0 text-base font-medium text-silk outline-none placeholder:text-oat"
-              />
-            </form>
+            <SearchField className={`mr-3 ml-4 w-[140px] lg:w-[200px] ${home ? 'lg:mx-0' : 'lg:mr-4'}`} />
 
             <Link
               to="/carrinho"
@@ -121,7 +89,12 @@ export default function SiteHeader({ home = false }: { home?: boolean }) {
         </nav>
       </div>
 
-      <MenuMobile aberto={menuAberto} onFechar={fecharMenu} quantidadeCarrinho={quantidadeCarrinho} />
+      {/* Só na Busca mobile: linha extra de 64px com o campo em largura total. */}
+      {naBusca && (
+        <div className="flex h-16 px-5 pt-1 pb-4 md:hidden">
+          <SearchField className="w-full" />
+        </div>
+      )}
     </header>
   )
 }
