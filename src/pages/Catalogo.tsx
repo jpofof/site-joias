@@ -18,7 +18,7 @@ import {
 import type { Categoria } from '../types/produto'
 
 const rotulo = 'text-xs font-medium tracking-[0.18em] text-ink-2 uppercase'
-const linkMigalha = 'flex h-11 items-center underline underline-offset-[3px]'
+const linkMigalha = '-mx-1.5 flex h-11 items-center px-1.5 underline underline-offset-[3px]'
 
 export default function Catalogo() {
   const [params, setParams] = useSearchParams()

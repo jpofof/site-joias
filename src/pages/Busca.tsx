@@ -8,7 +8,7 @@ import { useValorPorBreakpoint } from '../hooks/useValorPorBreakpoint'
 import { agruparEOrdenar, buscar, lerOrdemBusca, ordensBusca, type OrdemBusca } from '../lib/busca'
 
 const rotulo = 'text-xs font-medium tracking-[0.18em] text-ink-2 uppercase'
-const linkMigalha = 'flex h-11 items-center underline underline-offset-[3px]'
+const linkMigalha = '-mx-1.5 flex h-11 items-center px-1.5 underline underline-offset-[3px]'
 const botaoVazio =
   'flex h-13 items-center justify-center self-start rounded-btn bg-cherry px-7 text-[13px] font-medium tracking-[0.14em] text-silk uppercase md:px-8 md:text-sm'
 const botaoVerTodos =

@@ -103,7 +103,7 @@ export default function Carrinho() {
 
   const migalha = (
     <nav aria-label="Caminho" className="hidden items-center gap-3 pt-3 text-sm text-ink-2 md:flex">
-      <Link to="/" className="flex h-11 items-center underline underline-offset-[3px]">
+      <Link to="/" className="-mx-1.5 flex h-11 items-center px-1.5 underline underline-offset-[3px]">
         Início
       </Link>
       <span aria-hidden="true">/</span>

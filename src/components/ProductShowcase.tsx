@@ -36,7 +36,8 @@ export default function ProductShowcase({ eyebrow, titulo, produtos, fundo, link
           </Link>
           <Link
             to="/catalogo"
-            className="hidden items-center gap-2 border-b border-noir pb-1.5 text-sm font-medium tracking-[0.16em] uppercase lg:flex"
+            // Área clicável de 44px: o padding de cima é compensado pela margem negativa, então nada se move.
+            className="-mt-[17px] hidden items-center gap-2 border-b border-noir pt-[17px] pb-1.5 text-sm font-medium tracking-[0.16em] uppercase lg:flex"
           >
             {linkDesktop}
             <ArrowRightIcon size={16} />

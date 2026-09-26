@@ -79,7 +79,7 @@ function PaginaProduto({ id }: { id?: string }) {
         aria-label="Caminho"
         className="-mx-5 flex h-13 items-center gap-0.5 px-5 text-sm text-ink-2 md:mx-0 md:h-auto md:gap-3 md:px-0 md:pt-8"
       >
-        <Link to="/" className="flex h-11 items-center px-1.5 underline underline-offset-[3px] md:px-0">
+        <Link to="/" className="flex h-11 items-center px-1.5 underline underline-offset-[3px] md:-mx-1.5">
           Início
         </Link>
         <span aria-hidden="true">/</span>
@@ -91,7 +91,7 @@ function PaginaProduto({ id }: { id?: string }) {
         </span>
         <Link
           to={urlCategoria(produto.categoria)}
-          className="flex h-11 items-center px-1.5 underline underline-offset-[3px] md:px-0"
+          className="flex h-11 items-center px-1.5 underline underline-offset-[3px] md:-mx-1.5"
         >
           {categoria}
         </Link>

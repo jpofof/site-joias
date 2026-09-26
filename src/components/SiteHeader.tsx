@@ -27,7 +27,12 @@ export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quan
   return (
     <header className="bg-noir">
       <div className="mx-auto flex h-18 max-w-[1440px] items-center justify-between pr-2 pl-5 md:h-20 md:pr-9 md:pl-12 lg:h-22 lg:px-24">
-        <Link to="/" aria-label={`${site.nome}, página inicial`}>
+        {/* Área clicável de 44px de altura (padding compensado por margem negativa, sem mover o logo). */}
+        <Link
+          to="/"
+          aria-label={`${site.nome}, página inicial`}
+          className={`block -my-[5px] py-[5px] md:-my-1 md:py-1 ${home ? 'lg:my-0 lg:py-0' : 'lg:-my-0.5 lg:py-0.5'}`}
+        >
           <img src="/logo-eduah.png" alt={site.nome} className={`block h-[34px] w-auto md:h-9 ${home ? 'lg:h-12' : 'lg:h-10'}`} />
         </Link>
 

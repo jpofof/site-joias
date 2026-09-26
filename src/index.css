@@ -80,6 +80,12 @@
     opacity: 0.78;
   }
 
+  /* O <main> só recebe foco por código (troca de página, "Pular para o conteúdo"): sem contorno. */
+  main:focus,
+  main:focus-visible {
+    outline: none;
+  }
+
   /* currentColor: o anel segue a cor do texto, então serve em fundo claro e no header/footer escuros. */
   :focus-visible {
     outline: 2px solid currentColor;
