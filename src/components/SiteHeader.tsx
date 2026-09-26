@@ -19,7 +19,7 @@ type Props = {
 
 export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quantidadeCarrinho }: Props) {
   const naBusca = useLocation().pathname === '/busca'
-  // Começa com o texto visível ("Carrinho 0"), para o nome acessível conter o rótulo do botão.
+  // Só no link do mobile (texto visível: "Carrinho"); começa com o texto visível, para o nome acessível conter o rótulo.
   const rotuloCarrinho = `Carrinho ${quantidadeCarrinho} ${quantidadeCarrinho === 1 ? 'produto' : 'produtos'}`
 
   const classeNavLink = ({ isActive }: { isActive: boolean }) =>
@@ -34,7 +34,7 @@ export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quan
           aria-label={`${site.nome}, página inicial`}
           className={`block -my-[5px] py-[5px] md:-my-1 md:py-1 ${home ? 'lg:my-0 lg:py-0' : 'lg:-my-0.5 lg:py-0.5'}`}
         >
-          <img src="/logo-eduah.png" alt={site.nome} width={400} height={154} className={`block h-[34px] w-auto md:h-9 ${home ? 'lg:h-12' : 'lg:h-10'}`} />
+          <img src="/logo-eduah-300.png" alt={site.nome} width={300} height={116} className={`block h-[34px] w-auto md:h-9 ${home ? 'lg:h-12' : 'lg:h-10'}`} />
         </Link>
 
         <nav aria-label="Principal">
@@ -70,9 +70,9 @@ export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quan
 
             <SearchField className={`mr-3 ml-4 w-[140px] lg:w-[200px] ${home ? 'lg:mx-0' : 'lg:mr-4'}`} />
 
+            {/* Sem aria-label: o nome acessível sai do texto visível ("Carrinho" + número) mais o trecho sr-only. */}
             <Link
               to="/carrinho"
-              aria-label={rotuloCarrinho}
               className={`flex h-12 items-center gap-2 px-3 text-[15px] font-medium text-silk lg:px-0 ${
                 home ? 'lg:gap-2.5 lg:text-sm lg:font-normal lg:tracking-[0.16em] lg:uppercase' : ''
               }`}
@@ -90,6 +90,7 @@ export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quan
               >
                 {quantidadeCarrinho}
               </span>
+              <span className="sr-only">{quantidadeCarrinho === 1 ? 'produto' : 'produtos'}</span>
             </Link>
           </div>
         </nav>
