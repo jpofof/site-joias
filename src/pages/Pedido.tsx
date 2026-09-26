@@ -20,6 +20,7 @@ export default function Pedido() {
 
   return (
     <main className="site-container">
+      <meta name="robots" content="noindex" />
       <section className="flex flex-col gap-8 pt-8 pb-14 md:gap-6 md:pt-5 md:pb-16 lg:gap-10 lg:pt-8 lg:pb-24">
         <nav aria-label="Caminho" className="hidden items-center gap-3 pt-3 text-sm text-ink-2 md:flex">
           <Link to="/" className="-mx-1.5 flex h-11 items-center px-1.5 underline underline-offset-[3px]">

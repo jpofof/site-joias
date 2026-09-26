@@ -7,6 +7,8 @@ const botao =
 export default function NotFound() {
   return (
     <main className="site-container">
+      {/* Elemento nativo do React 19: vai para o <head>. Uma 404 servida com status 200 não deve ser indexada. */}
+      <meta name="robots" content="noindex" />
       <section className="flex flex-col items-start gap-5 pt-12 pb-14 text-left md:items-center md:gap-6 md:pt-20 md:pb-20 md:text-center lg:py-24">
         <div aria-hidden="true" className="font-display text-[120px] leading-none text-greige md:text-[160px] lg:text-[200px]">
           404

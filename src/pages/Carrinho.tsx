@@ -116,6 +116,7 @@ export default function Carrinho() {
   if (linhas.length === 0) {
     return (
       <main className="site-container pb-14 md:pb-16 lg:pb-[72px]">
+        <meta name="robots" content="noindex" />
         {anunciador}
         <section className="flex flex-col gap-5 pt-8 md:gap-6 lg:gap-8">
           {migalha}
@@ -162,6 +163,7 @@ export default function Carrinho() {
 
   return (
     <main className="site-container">
+      <meta name="robots" content="noindex" />
       {anunciador}
       <section className="flex flex-col gap-4 pt-7 md:gap-5 md:pt-5 lg:gap-6 lg:pt-8">
         {migalha}
