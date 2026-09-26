@@ -24,6 +24,15 @@ export default function Layout() {
   // A Home tem header e footer próprios no desktop (variante `home`).
   const home = pathname === '/'
 
+  // O <main> de cada página é o alvo do "Pular para o conteúdo": recebe id e tabIndex -1 (focável só por código).
+  useEffect(() => {
+    const main = document.querySelector('main')
+    if (main) {
+      main.id = 'conteudo'
+      main.tabIndex = -1
+    }
+  }, [pathname])
+
   // Ao mudar de página (pathname): volta ao topo e move o foco para o conteúdo. Mudanças só de parâmetros
   // (filtros, paginação) e âncoras (#) não entram: essas telas já cuidam do próprio foco.
   const pathnameAnterior = useRef(pathname)

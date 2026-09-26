@@ -19,7 +19,8 @@ type Props = {
 
 export default function SiteHeader({ home = false, menuAberto, onAbrirMenu, quantidadeCarrinho }: Props) {
   const naBusca = useLocation().pathname === '/busca'
-  const rotuloCarrinho = `Carrinho, ${quantidadeCarrinho} ${quantidadeCarrinho === 1 ? 'produto' : 'produtos'}`
+  // Começa com o texto visível ("Carrinho 0"), para o nome acessível conter o rótulo do botão.
+  const rotuloCarrinho = `Carrinho ${quantidadeCarrinho} ${quantidadeCarrinho === 1 ? 'produto' : 'produtos'}`
 
   const classeNavLink = ({ isActive }: { isActive: boolean }) =>
     `${linkNav} ${home ? linkNavHome : linkNavPadrao} ${isActive ? 'underline underline-offset-8' : ''}`
