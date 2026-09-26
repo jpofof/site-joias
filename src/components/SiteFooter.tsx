@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { categorias, urlCategoria } from '../config/categorias'
-import { site } from '../config/site'
+import { site, whatsappAtivo } from '../config/site'
 
 const cabecalho =
   'mb-1 text-[11px] font-medium tracking-[0.22em] text-oat uppercase md:mb-2 md:text-xs md:tracking-[0.18em]'
@@ -14,7 +14,8 @@ function formatarWhatsApp(numero: string) {
 // `home`: footer próprio da Home no desktop (Main.dc.html): 400px, links de 16px sem altura fixa, gap 96.
 // Nesses links a área clicável tem 44px (padding) compensada por margem negativa, sem mudar o visual do quadro.
 export default function SiteFooter({ home = false }: { home?: boolean }) {
-  const { whatsapp, instagram, fraseMarca } = site
+  const { instagram, fraseMarca } = site
+  const whatsapp = whatsappAtivo
 
   const cab = `${cabecalho} ${home ? 'lg:mb-1 lg:tracking-[0.22em]' : ''}`
   const link = `flex h-11 items-center text-[15px] font-light ${home ? 'lg:-my-[10.5px] lg:text-base' : ''}`

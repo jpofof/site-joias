@@ -1,11 +1,9 @@
 import { useCallback, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { useCart } from '../hooks/useCart'
 import MenuMobile from './MenuMobile'
 import SiteFooter from './SiteFooter'
 import SiteHeader from './SiteHeader'
-
-// Substituído pela contagem real do carrinho no bloco 4 (feat/carrinho).
-const quantidadeCarrinho = 0 as number
 
 /** Contexto do Outlet: páginas podem abrir o Menu mobile (ex.: "Ver categorias" na Busca sem resultados). */
 export type LayoutContext = {
@@ -16,6 +14,7 @@ export type LayoutContext = {
 export default function Layout() {
   // A Home tem header e footer próprios no desktop (variante `home`).
   const home = useLocation().pathname === '/'
+  const { quantidadeTotal: quantidadeCarrinho } = useCart()
 
   const [menuAberto, setMenuAberto] = useState(false)
   const origemRef = useRef<HTMLElement | null>(null)

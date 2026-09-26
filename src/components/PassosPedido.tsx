@@ -1,4 +1,4 @@
-import { site } from '../config/site'
+import { whatsappAtivo } from '../config/site'
 
 const passos = ['Escolha seus produtos', 'Monte o carrinho', 'Finalize pelo WhatsApp']
 
@@ -20,9 +20,9 @@ export default function PassosPedido() {
             </li>
           ))}
         </ol>
-        {site.whatsapp && (
+        {whatsappAtivo && (
           <a
-            href={`https://wa.me/${site.whatsapp}`}
+            href={`https://wa.me/${whatsappAtivo}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-[52px] w-full items-center justify-center rounded-btn bg-cherry text-[13px] font-medium tracking-[0.16em] text-silk uppercase md:h-14 md:w-auto md:px-10 md:text-sm md:tracking-[0.14em] lg:tracking-[0.16em]"

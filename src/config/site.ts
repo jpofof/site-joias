@@ -27,3 +27,9 @@ export const site: SiteConfig = {
   instagram: '',
   sobreHome: { frase: '', texto: '', foto: '' },
 }
+
+/**
+ * Número de WhatsApp usado pelo site: só vale com DDI 55 + DDD + número (12 ou 13 dígitos, só dígitos).
+ * Vazio ou em outro formato = sem número (nenhum link wa.me é gerado e o envio do pedido fica indisponível).
+ */
+export const whatsappAtivo: string = /^55[0-9]{10,11}$/.test(site.whatsapp) ? site.whatsapp : ''
