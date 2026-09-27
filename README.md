@@ -34,7 +34,7 @@ src/
   config/       site.ts (contatos, Sobre), legal.ts (dados dos textos legais), categorias.ts
   content/      texto das páginas de Privacidade e Termos
   context/      CartContext (estado do carrinho)
-  data/produtos catálogo de exemplo, tipado
+  data/         produtos.json, site-config.json, legal.json (editados pelo Decap CMS) + produtos/index.ts (tipagem)
   lib/          funções puras (catálogo, busca, carrinho e mensagem do WhatsApp, preço, datas)
   hooks/        useCart e hooks de breakpoint
   types/        tipos (Produto, Categoria)
@@ -50,11 +50,28 @@ Tudo é preenchido em arquivos de configuração; nenhum precisa de mudança em 
 
 - **`src/config/site.ts`**: número de WhatsApp (só dígitos, `55` + DDD + número; sem ele o envio do pedido fica desabilitado), Instagram, frase da marca (footer), texto da seção Sobre da Home e conteúdo da página `/sobre`.
 - **`src/config/legal.ts`**: dados do responsável, CPF/CNPJ, e-mail, provedor de hospedagem, prazos, foro, política de trocas e datas de atualização. Enquanto vazios, aparecem entre colchetes, destacados, nas páginas `/privacidade` e `/termos`. Recomendada revisão jurídica antes de publicar.
-- **`src/data/produtos/index.ts`**: 24 produtos de **exemplo** (nomes, preços, descrições). A ordem do array é "mais recentes primeiro". Os produtos reais virão do Decap CMS.
+- **`src/data/produtos.json`**: 24 produtos de **exemplo** (nomes, preços, descrições). A ordem do array é "mais recentes primeiro" — editável pelo painel `/admin` (coleção "Produtos").
 - **Fotos**: os campos de imagem estão vazios e o site mostra placeholders nos tons da paleta.
 - **Lançamento**: Remover o bloqueio de indexação (robots.txt e X-Robots-Tag) e conferir o robots.txt no ar.
 
+## Painel Decap CMS (`/admin`)
+
+Autenticação por GitHub OAuth, com uma Netlify Function própria do site (`netlify/functions/auth.js` e `callback.js`, sem dependência nova) — não usa Netlify Identity (descontinuada para sites novos). Fluxo editorial: cada edição salva no painel cria uma branch e um Pull Request no repositório, nunca publica direto em `main`. Só quem tem acesso de escrita ao repositório `jpofof/site-joias` consegue completar o login (é assim que o GitHub já garante).
+
+Coleções: **Produtos** (`src/data/produtos.json`), **Configurações do site** (`src/data/site-config.json`) e **Dados legais** (`src/data/legal.json`, só os dados — o texto de `/privacidade` e `/termos` fica em `src/content/`, não é editável pelo painel).
+
+**Configuração necessária no Netlify (painel, nunca no código):**
+1. Criar um GitHub OAuth App (conta com acesso ao repositório): **Settings > Developer settings > OAuth Apps > New OAuth App**.
+   - Homepage URL: o endereço do site publicado.
+   - Authorization callback URL: `https://SEU-SITE/.netlify/functions/callback`.
+2. No Netlify, em **Site configuration > Environment variables**, criar:
+   - `GITHUB_OAUTH_CLIENT_ID` — Client ID do OAuth App.
+   - `GITHUB_OAUTH_CLIENT_SECRET` — Client secret do OAuth App (gerado na mesma tela).
+3. Em `public/admin/config.yml`, atualizar `base_url` para o mesmo endereço usado acima (hoje está com um placeholder marcado "TROCAR").
+4. Fazer um novo deploy depois de criar as variáveis (elas só valem em builds/functions criados depois).
+
+**Como testar o login antes da conta da cliente existir:** adicione sua própria conta do GitHub como colaboradora do repositório (**Settings > Collaborators**) e entre em `/admin` com ela. Quando a conta da Duda for criada, repita o convite para ela e remova a sua, se não for mais precisar.
+
 ## Ainda não implementado
 
-- Painel Decap CMS em `/admin` (aguarda a decisão do método de autenticação).
 - Analytics, pixel e banner de cookies: decidido não ter. Só há armazenamento essencial (o carrinho).

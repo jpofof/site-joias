@@ -18,8 +18,12 @@ export type Legal = {
   politicaTrocas: string
 }
 
-// PENDENTE (cliente + revisão jurídica): todos os campos vazios aparecem entre colchetes, com fundo suave,
-// nas páginas /privacidade e /termos até serem preenchidos aqui. Este é o único lugar a editar.
+import dados from '../data/legal.json'
+
+// Preenchido pela cliente (+ revisão jurídica) no Decap CMS ("Dados legais", único lugar a editar).
+// Campos vazios aparecem entre colchetes, com fundo suave, nas páginas /privacidade e /termos.
+// Mesclado sobre estes padrões (em vez de um "as Legal" direto): se o JSON perder um campo, ele
+// volta a string vazia em vez de undefined silencioso.
 export const legal: Legal = {
   privacidadeAtualizadaEm: '',
   termosAtualizadosEm: '',
@@ -31,4 +35,8 @@ export const legal: Legal = {
   prazoConversas: '',
   foro: '',
   politicaTrocas: '',
+  // "as Partial": o JSON de hoje tem todos os campos, mas o TypeScript não pode presumir isso de um
+  // arquivo editado por fora (Decap CMS). Partial mantém o spread com efeito real: campo ausente no
+  // JSON cai no padrão acima, em vez do TS provar (e o build travar) que o spread sempre sobrescreve.
+  ...(dados as Partial<Legal>),
 }

@@ -3,6 +3,7 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
   # O Vite 8 exige Node ^20.19.0 ou >=22.12.0.

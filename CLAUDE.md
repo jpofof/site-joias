@@ -78,7 +78,7 @@ Vitrine online de joias para uma cliente próxima. Sem checkout e sem pagamento:
 - Tailwind CSS v4 (`@tailwindcss/vite`; tema em `@theme` dentro de `src/index.css`; sem `tailwind.config.ts`)
 - ESLint
 - Carrinho: Context API + hook `useCart` + `localStorage` (sem biblioteca de estado). Guarda `{ id, quantidade }`.
-- CMS: Decap CMS em `/admin`. Autenticação decidida: GitHub OAuth via Netlify Function própria do site (não Netlify Identity, descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request, nunca publica direto em `main`). Implementação em andamento no bloco `feat/cms`; formato de dados (JSON) a confirmar nesse bloco.
+- CMS: Decap CMS em `/admin` (implementado no bloco `feat/cms`). Autenticação: GitHub OAuth via Netlify Function própria do site (`netlify/functions/auth.js` e `callback.js`, sem dependência nova; não Netlify Identity, descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request, nunca publica direto em `main`). Três coleções, cada uma um único arquivo JSON com `list`/`object` (não uma pasta por item, para preservar a ordem de cadastro sem campo extra): **Produtos** (`src/data/produtos.json`), **Configurações do site** (`src/data/site-config.json`) e **Dados legais** (`src/data/legal.json`, só os dados — o texto de `/privacidade` e `/termos` continua em `src/content/`, fora do CMS). `site.ts` e `legal.ts` importam esses JSONs e fazem merge com os padrões vazios (não `as T` direto), para um campo faltando no JSON cair no padrão em vez de `undefined` silencioso. Variáveis de ambiente do OAuth (`GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`) só no painel do Netlify — ver README.
 - Deploy: Netlify. Versionamento: Git + GitHub
 
 ## Estrutura planejada
@@ -93,8 +93,7 @@ src/config/legal.ts (dados pendentes da cliente para Privacidade/Termos)
 src/config/site.ts (número de WhatsApp e demais constantes do site)
 src/hooks/useCart.ts
 src/context/CartContext.tsx
-src/data/produtos/  (arquivos gerados/editados pelo Decap)
-src/data/site-config.json  (arquivo único gerado pelo Decap)
+src/data/produtos.json, site-config.json, legal.json  (arquivos únicos editados pelo Decap; produtos/index.ts só reexporta o JSON tipado)
 ```
 Um único `ProductCard` recebendo um `Produto` por props; nunca um componente por produto.
 Fonte de verdade visual: `docs/design/*.dc.html` (ver `docs/reference/design-handoff.md`).

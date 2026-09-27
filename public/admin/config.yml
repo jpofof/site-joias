@@ -1,0 +1,111 @@
+backend:
+  name: github
+  repo: jpofof/site-joias
+  branch: main
+  # TROCAR para o domínio final no lançamento (hoje aponta para o site de teste, bloqueado para indexação).
+  base_url: https://SITE.netlify.app
+  auth_endpoint: .netlify/functions/auth
+
+publish_mode: editorial_workflow
+
+media_folder: "public/images/produtos"
+public_folder: "/images/produtos"
+
+collections:
+  - name: "produtos"
+    label: "Produtos"
+    files:
+      - name: "lista"
+        label: "Lista de produtos"
+        file: "src/data/produtos.json"
+        fields:
+          - label: "Produtos"
+            name: "produtos"
+            widget: "list"
+            summary: "{{fields.nome}} — {{fields.categoria}}"
+            fields:
+              - label: "Identificador único (ex.: aneis-05, não repetir)"
+                name: "id"
+                widget: "string"
+                pattern: ["^[a-z0-9-]+$", "Só letras minúsculas, números e hífen"]
+              - { label: "Nome", name: "nome", widget: "string" }
+              - label: "Categoria"
+                name: "categoria"
+                widget: "select"
+                options:
+                  - { label: "Anéis", value: "aneis" }
+                  - { label: "Brincos", value: "brincos" }
+                  - { label: "Colares", value: "colares" }
+                  - { label: "Pulseiras", value: "pulseiras" }
+                  - { label: "Piercings", value: "piercings" }
+                  - { label: "Linha masculina", value: "linha-masculina" }
+              - { label: "Preço (R$)", name: "preco", widget: "number", value_type: "float" }
+              - { label: "Foto principal", name: "imagem", widget: "image", required: false }
+              - label: "Fotos extras"
+                name: "imagens"
+                widget: "list"
+                required: false
+                field: { label: "Foto", name: "foto", widget: "image" }
+              - { label: "Descrição", name: "descricao", widget: "text", required: false }
+              - label: "Detalhes"
+                name: "detalhes"
+                widget: "object"
+                required: false
+                fields:
+                  - { label: "Material", name: "material", widget: "string", required: false }
+                  - { label: "Medidas", name: "medidas", widget: "string", required: false }
+                  - { label: "Cuidados", name: "cuidados", widget: "string", required: false }
+              - { label: "Destacar na Home e na busca", name: "destaque", widget: "boolean", default: false }
+
+  - name: "site"
+    label: "Configurações do site"
+    files:
+      - name: "config"
+        label: "Configurações do site"
+        file: "src/data/site-config.json"
+        fields:
+          - label: "WhatsApp (só dígitos, com 55 + DDD)"
+            name: "whatsapp"
+            widget: "string"
+            required: false
+            pattern: ["^$|^55[0-9]{10,11}$", "Deixe vazio ou use 55 + DDD + número"]
+          - { label: "Instagram (sem @)", name: "instagram", widget: "string", required: false }
+          - { label: "Frase da marca (footer)", name: "fraseMarca", widget: "string", required: false }
+          - label: "Seção Sobre da Home"
+            name: "sobreHome"
+            widget: "object"
+            fields:
+              - { label: "Frase", name: "frase", widget: "string", required: false }
+              - { label: "Texto", name: "texto", widget: "text", required: false }
+              - { label: "Foto", name: "foto", widget: "image", required: false }
+          - label: "Página /sobre"
+            name: "sobre"
+            widget: "object"
+            fields:
+              - { label: "Frase", name: "frase", widget: "string", required: false }
+              - label: "Parágrafos"
+                name: "paragrafos"
+                widget: "list"
+                required: false
+                field: { label: "Parágrafo", name: "paragrafo", widget: "text" }
+              - { label: "Foto", name: "foto", widget: "image", required: false }
+              - { label: "Descrição da foto (leitor de tela)", name: "fotoAlt", widget: "string", required: false }
+
+  - name: "legal"
+    label: "Dados legais"
+    description: "Só os dados abaixo (nomes, datas, prazos). O TEXTO das páginas de Privacidade e Termos não é editado aqui — fica em src/content/."
+    files:
+      - name: "dados"
+        label: "Dados legais"
+        file: "src/data/legal.json"
+        fields:
+          - { label: "Última atualização — Privacidade (AAAA-MM-DD)", name: "privacidadeAtualizadaEm", widget: "string", required: false }
+          - { label: "Última atualização — Termos (AAAA-MM-DD)", name: "termosAtualizadosEm", widget: "string", required: false }
+          - { label: "Responsável (nome/razão social)", name: "responsavel", widget: "string", required: false }
+          - { label: "CPF/CNPJ", name: "cpfCnpj", widget: "string", required: false }
+          - { label: "E-mail de contato", name: "email", widget: "string", required: false }
+          - { label: "Provedor de hospedagem", name: "provedorHospedagem", widget: "string", required: false }
+          - { label: "Prazo de resposta (dias)", name: "prazoRespostaDias", widget: "string", required: false }
+          - { label: "Prazo de guarda das conversas", name: "prazoConversas", widget: "string", required: false }
+          - { label: "Foro (Cidade/UF)", name: "foro", widget: "string", required: false }
+          - { label: "Política de trocas", name: "politicaTrocas", widget: "text", required: false }

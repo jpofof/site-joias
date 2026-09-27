@@ -30,9 +30,13 @@ export type SiteConfig = {
   sobre: SobrePagina
 }
 
-// PENDENTE (cliente): frase da marca, número do WhatsApp (chip novo), Instagram e os textos de Sobre (Home e página /sobre).
-// Único lugar de configuração. Campos vazios não são exibidos (footer, botão "Falar no WhatsApp", seção Sobre)
-// e o envio do pedido fica desabilitado sem número.
+import dados from '../data/site-config.json'
+
+// Preenchido pela cliente no Decap CMS ("Configurações do site", único lugar de configuração;
+// "nome" fica fixo aqui, não é um campo do CMS). Campos vazios não são exibidos (footer, botão
+// "Falar no WhatsApp", seção Sobre) e o envio do pedido fica desabilitado sem número.
+// Mesclado sobre estes padrões (em vez de um "as SiteConfig" direto): se o JSON perder um campo,
+// ele volta a string vazia em vez de undefined silencioso.
 export const site: SiteConfig = {
   nome: 'Eduáh Acessórios',
   fraseMarca: '',
@@ -40,6 +44,10 @@ export const site: SiteConfig = {
   instagram: '',
   sobreHome: { frase: '', texto: '', foto: '' },
   sobre: { frase: '', paragrafos: [], foto: '', fotoAlt: '' },
+  // "as Partial": o JSON de hoje tem todos os campos, mas o TypeScript não pode presumir isso de um
+  // arquivo editado por fora (Decap CMS). Partial mantém o spread com efeito real: campo ausente no
+  // JSON cai no padrão acima, em vez do TS provar (e o build travar) que o spread sempre sobrescreve.
+  ...(dados as Partial<SiteConfig>),
 }
 
 /**
