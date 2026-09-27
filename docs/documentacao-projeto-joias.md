@@ -12,9 +12,9 @@ Este documento é a v1 do planejamento (setembro/2026, antes do código). Muita 
 
 **No ar (Netlify, teste):** deploy conectado ao GitHub (`jpofof/site-joias`, branch `main`), com bloqueio temporário de indexação (`robots.txt` com `Disallow: /` e cabeçalho `X-Robots-Tag: noindex, nofollow` em `netlify.toml`, ambos marcados "TEMPORÁRIO: remover no lançamento"). Ainda sem produtos, fotos, WhatsApp nem dados legais reais — ver pendências no README e na seção 9.
 
-**Em andamento:** bloco 6 (`feat/cms`) — Decap CMS em `/admin`. Decisão de autenticação já tomada (seção 4): GitHub OAuth via Netlify Function própria, sem Netlify Identity (descontinuada para sites novos), com fluxo editorial (cada edição gera branch + Pull Request).
+**Concluído e testado:** bloco 6 (`feat/cms`) — Decap CMS em `/admin`, mesclado em `main`. Autenticação: GitHub OAuth via Netlify Function própria (variáveis `GITHUB_OAUTH_CLIENT_ID`/`GITHUB_OAUTH_CLIENT_SECRET` configuradas no painel do Netlify, sem "Contains secret values" — free tier não permite combinar secret com "All scopes"/"Same value for all contexts", risco aceito para este projeto). `base_url` do `config.yml` trocado do placeholder para a URL real (`https://mellifluous-kleicha-5eff41.netlify.app`). Teste ponta a ponta feito no painel: login, criação/edição de produto na coleção Produtos, Publish com status "Ready" — a Pull Request do fluxo editorial é mesclada **automaticamente** pelo Decap ao publicar (a cliente nunca precisa abrir o GitHub), commit aparece em `jpofof/site-joias` e o Netlify redeploya sozinho. Corrigido um bug de schema: o campo `destaque` (Destacar na home e na busca) estava sem `required: false` no `config.yml`, o que impedia salvar qualquer produto da lista porque os produtos de exemplo antigos não tinham esse campo preenchido (a coleção Produtos é um `list` num arquivo único — salvar valida a lista inteira).
 
-**Pendente:** conteúdo real da cliente (produtos, fotos, WhatsApp, textos institucionais, dados legais — ver seção 9), domínio próprio, remoção do bloqueio de indexação no lançamento.
+**Pendente:** conteúdo real da cliente (produtos, fotos, WhatsApp, textos institucionais, dados legais — ver seção 9), domínio próprio, remoção do bloqueio de indexação no lançamento, convidar a conta do GitHub da Duda como colaboradora do repositório antes da entrega (o login no `/admin` só funciona pra contas com acesso de colaborador — testado com uma conta sem acesso, que não conseguiu entrar).
 
 ## 1. Visão Geral do Projeto
 
@@ -165,7 +165,7 @@ Não há uma seção de "vitrine completa" nem "fotos de estilo de vida" (`Lifes
 - **Estilização:** Tailwind CSS v4 (plugin `@tailwindcss/vite`; tema configurado via `@theme` no CSS, sem `tailwind.config.ts` obrigatório)
 - **Qualidade de código:** ESLint
 - **Gerenciamento de estado do carrinho:** Context API + hook customizado (`useCart`), persistido em `localStorage`
-- **CMS:** Decap CMS (admin em `/admin`). Autenticação decidida: GitHub OAuth via Netlify Function própria (`netlify/functions/`), sem Netlify Identity (descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request, sem publicação direta em `main`). Implementação em andamento no bloco `feat/cms`.
+- **CMS:** Decap CMS (admin em `/admin`), implementado e testado ponta a ponta no bloco `feat/cms`. Autenticação: GitHub OAuth via Netlify Function própria (`netlify/functions/`), sem Netlify Identity (descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request; ao clicar "Publish now" com status "Ready", o próprio Decap mescla a PR pela API do GitHub, sem exigir confirmação manual da cliente). Login exige que a conta usada tenha acesso de colaborador ao repositório no GitHub.
 - **Hospedagem/Deploy:** Netlify (mesmo fluxo já usado nos outros projetos)
 - **Controle de versão:** Git + GitHub
 
@@ -316,7 +316,7 @@ npx skills add rtadewald/skills@img-to-html -g -y
 
 ## 9. Itens em Aberto
 
-**Resolvidos desde a v1 (mantidos aqui só como registro):** autenticação do CMS (GitHub OAuth via Netlify Function, seção 4); cabeçalho/busca/carrinho (design final em `docs/design/`, seção 3.1); link do hero (campo livre, editável no CMS); campos opcionais do footer (já implementados, só falta o conteúdo real); banner de cookies e pixel (decidido: nenhum dos dois); fonte hospedada localmente (`public/fonts/`); `/produto/:id`, `/sobre` e a interface do carrinho (implementados).
+**Resolvidos desde a v1 (mantidos aqui só como registro):** autenticação do CMS (GitHub OAuth via Netlify Function, seção 4); cabeçalho/busca/carrinho (design final em `docs/design/`, seção 3.1); link do hero (campo livre, editável no CMS); campos opcionais do footer (já implementados, só falta o conteúdo real); banner de cookies e pixel (decidido: nenhum dos dois); fonte hospedada localmente (`public/fonts/`); `/produto/:id`, `/sobre` e a interface do carrinho (implementados); CMS testado ponta a ponta (login, criar/editar produto, publicar) — ver seção 0; variáveis de ambiente do OAuth configuradas no Netlify; `base_url` do `config.yml` apontando para a URL real de teste; bug do campo `destaque` sem `required: false` corrigido (branch `fix/cms-destaque-required`, mesclada em `main`).
 
 **Ainda pendentes (dependem da cliente ou de decisão de negócio):**
 - Produtos reais (nomes, preços, categorias, fotos, descrições) — hoje o catálogo é 24 itens de exemplo em `src/data/produtos/index.ts`.
@@ -328,6 +328,8 @@ npx skills add rtadewald/skills@img-to-html -g -y
 - Remover o bloqueio temporário de indexação (`robots.txt` e `X-Robots-Tag` em `netlify.toml`) no lançamento, e conferir o `robots.txt` no ar depois.
 - Confirmar valor final dentro da faixa R$1.800–R$2.500 após levantamento de fotos/ajustes.
 - Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude.
+- Convidar a conta do GitHub da Duda como colaboradora do repositório `jpofof/site-joias` (Settings → Collaborators) perto do lançamento, e ela aceitar o convite — só assim ela consegue logar no `/admin`.
+- Decidir se o "Publish now" mesclar a PR sozinho (sem revisão manual do João) é aceitável em produção, ou se vale alguma trava adicional (ex.: exigir aprovação de PR no GitHub) — hoje o comportamento testado é publicação direta, sem revisão intermediária.
 
 ## 10. Referência de Implementação (piloto)
 
@@ -376,9 +378,9 @@ Economia: ~30,7k tokens só em MCP (~67% dessa categoria) e ~31,9k no total (~30
 
 - **Piloto (referência, não usar em produção):** GitHub `jpofof/site-joias-piloto` (privado), branches `main` (carrinho) e `teste-skill-design` (redesenho do `ProductCard` com Tailwind v4 + skill `frontend-design`), tags `piloto-carrinho` e `piloto-design-card`. Pasta local: `C:\Users\jpofe\Downloads\skills-test-harness\site-joias-teste\`.
 - **Projeto real:** GitHub `jpofof/site-joias` (privado), pasta local `C:\Users\jpofe\projetos\site-joias\`.
-- **Estado (27/09/2026):** blocos 1 a 5 implementados e mesclados em `main` (base visual, vitrine, busca, carrinho, páginas legais), mais a revisão geral (`chore/revisao-geral`) e o bloqueio temporário de indexação (`chore/pre-lancamento`) — ver seção 0. `npm run build`, `npm run lint` e `npx tsc --noEmit` passam sem erro. Deploy de teste ativo no Netlify, conectado a `jpofof/site-joias` (branch `main`), com o site bloqueado para indexação. Bloco 6 (`feat/cms`) em andamento.
+- **Estado (27/09/2026):** blocos 1 a 6 implementados e mesclados em `main` (base visual, vitrine, busca, carrinho, páginas legais, CMS), mais a revisão geral (`chore/revisao-geral`), o bloqueio temporário de indexação (`chore/pre-lancamento`) e a correção do schema do CMS (`fix/cms-destaque-required`) — ver seção 0. `npm run build`, `npm run lint` e `npx tsc --noEmit` passam sem erro. Deploy de teste ativo no Netlify, conectado a `jpofof/site-joias` (branch `main`), com o site bloqueado para indexação. CMS testado ponta a ponta (login, criar/editar/publicar produto) e funcionando.
 - **Ambiente do Claude Code:** `docs/` com esta documentação, `docs/design/` (fonte de verdade visual) e `docs/reference/` (mapa do design, arquitetura de navegação como referência histórica); `CLAUDE.md` com as regras do projeto (atualizado a cada bloco); skill `frontend-design` disponível; MCP reduzido a `claude-in-chrome` e `claude-mem`.
-- **Próximos passos:** (1) bloco 6 — Decap CMS (`/admin`), com a autenticação já decidida (seção 4); (2) receber os materiais reais da cliente (seção 9); (3) remover o bloqueio de indexação e publicar de fato.
+- **Próximos passos:** (1) receber os materiais reais da cliente (seção 9); (2) convidar a conta do GitHub da Duda como colaboradora, perto do lançamento; (3) remover o bloqueio de indexação e publicar de fato.
 - **Fluxo de trabalho:** uma branch por bloco a partir de `main` (ex.: `feat/vitrine`, `feat/carrinho`, `feat/cms`); diff revisado antes de cada commit; nada de commit ou push autônomo; `tsc`, `lint` e `build` limpos antes do push; Conventional Commits com mensagem em inglês e português.
 
 Este documento (`documentacao-projeto-joias.md`) é um arquivo estático — se a conversa mudar, ele precisa ser enviado novamente para dar contexto técnico completo.
