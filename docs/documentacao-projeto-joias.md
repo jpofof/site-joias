@@ -16,6 +16,8 @@ Este documento é a v1 do planejamento (setembro/2026, antes do código). Muita 
 
 **Pendente:** conteúdo real da cliente (produtos, fotos, WhatsApp, textos institucionais, dados legais — ver seção 9), domínio próprio, remoção do bloqueio de indexação no lançamento, convidar a conta do GitHub da Duda como colaboradora do repositório antes da entrega (o login no `/admin` só funciona pra contas com acesso de colaborador — testado com uma conta sem acesso, que não conseguiu entrar).
 
+**Decidido (27/09/2026), implementação pendente:** descartar o header próprio da Home (`Main.dc.html` — nav maiúsculo, gap 40, sem indicação de página ativa) em favor de um único `SiteHeader` padronizado igual ao das demais páginas (`nav aria-label="Principal"`, sublinhado na página ativa, ícone de sacola no Carrinho). Motivo: esse já era o padrão em 7 das 8 páginas, tem melhor acessibilidade e evita variação condicional do componente por rota. Detalhes em `docs/reference/design-handoff.md` §4.
+
 ## 1. Visão Geral do Projeto
 
 Vitrine online de joias para cliente próxima, com objetivo de exibir produtos, permitir seleção via carrinho e redirecionar o interesse de compra para o WhatsApp. Sem checkout/pagamento no site. Cliente atualiza o catálogo sozinha via painel de edição.

@@ -21,7 +21,7 @@ function focarConteudo() {
 
 export default function Layout() {
   const { pathname, hash } = useLocation()
-  // A Home tem header e footer próprios no desktop (variante `home`).
+  // A Home tem footer próprio no desktop (variante `home`); o header é o mesmo em todas as páginas.
   const home = pathname === '/'
 
   // O <main> de cada página é o alvo do "Pular para o conteúdo": recebe id e tabIndex -1 (focável só por código).
@@ -74,7 +74,7 @@ export default function Layout() {
       >
         Pular para o conteúdo
       </a>
-      <SiteHeader home={home} menuAberto={menuAberto} onAbrirMenu={abrirMenu} quantidadeCarrinho={quantidadeCarrinho} />
+      <SiteHeader menuAberto={menuAberto} onAbrirMenu={abrirMenu} quantidadeCarrinho={quantidadeCarrinho} />
       <div className="flex-1">
         <Outlet context={{ abrirMenu } satisfies LayoutContext} />
       </div>
