@@ -55,8 +55,7 @@ collections:
                   - { label: "Material", name: "material", widget: "string", required: false }
                   - { label: "Medidas", name: "medidas", widget: "string", required: false }
                   - { label: "Cuidados", name: "cuidados", widget: "string", required: false }
-              - { label: "Destacar na Home e na busca", name: "destaque", widget: "boolean", default: false }
-
+              - { label: "Destacar na home e na busca", name: "destaque", widget: "boolean", required: false, default: false }
   - name: "site"
     label: "Configurações do site"
     files:
