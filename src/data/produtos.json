@@ -216,6 +216,13 @@
       "nome": "Produto Teste",
       "categoria": "aneis",
       "preco": 1
+    },
+    {
+      "destaque": false,
+      "id": "tes-012",
+      "nome": "Teste 2",
+      "categoria": "aneis",
+      "preco": 1
     }
   ]
 }
