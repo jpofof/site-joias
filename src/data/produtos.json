@@ -209,6 +209,13 @@
       "preco": 129.9,
       "imagem": "",
       "descricao": "Descrição de exemplo, a substituir pelo texto real."
+    },
+    {
+      "destaque": false,
+      "id": "teste-011",
+      "nome": "Produto Teste",
+      "categoria": "aneis",
+      "preco": 1
     }
   ]
 }
