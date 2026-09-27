@@ -3,7 +3,7 @@ backend:
   repo: jpofof/site-joias
   branch: main
   # TROCAR para o domínio final no lançamento (hoje aponta para o site de teste, bloqueado para indexação).
-  base_url: https://SITE.netlify.app
+  base_url: https://mellifluous-kleicha-5eff41.netlify.app
   auth_endpoint: .netlify/functions/auth
 
 publish_mode: editorial_workflow
