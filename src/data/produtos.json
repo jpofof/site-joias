@@ -5,7 +5,7 @@
       "nome": "Anel Exemplo 01",
       "categoria": "aneis",
       "preco": 89.9,
-      "imagem": "",
+      "imagem": "/images/produtos/nalaura.jpg",
       "descricao": "Descrição de exemplo, a substituir pelo texto real.",
       "detalhes": {
         "material": "Material de exemplo",
@@ -209,6 +209,20 @@
       "preco": 129.9,
       "imagem": "",
       "descricao": "Descrição de exemplo, a substituir pelo texto real."
+    },
+    {
+      "destaque": false,
+      "id": "teste-011",
+      "nome": "Produto Teste",
+      "categoria": "aneis",
+      "preco": 1
+    },
+    {
+      "destaque": false,
+      "id": "tes-012",
+      "nome": "Teste 2",
+      "categoria": "aneis",
+      "preco": 1
     }
   ]
 }
