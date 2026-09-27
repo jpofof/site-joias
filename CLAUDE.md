@@ -78,7 +78,7 @@ Vitrine online de joias para uma cliente próxima. Sem checkout e sem pagamento:
 - Tailwind CSS v4 (`@tailwindcss/vite`; tema em `@theme` dentro de `src/index.css`; sem `tailwind.config.ts`)
 - ESLint
 - Carrinho: Context API + hook `useCart` + `localStorage` (sem biblioteca de estado). Guarda `{ id, quantidade }`.
-- CMS: Decap CMS em `/admin` (método de autenticação ainda em decisão — não implementar antes de eu decidir)
+- CMS: Decap CMS em `/admin`. Autenticação decidida: GitHub OAuth via Netlify Function própria do site (não Netlify Identity, descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request, nunca publica direto em `main`). Implementação em andamento no bloco `feat/cms`; formato de dados (JSON) a confirmar nesse bloco.
 - Deploy: Netlify. Versionamento: Git + GitHub
 
 ## Estrutura planejada

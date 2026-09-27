@@ -1,5 +1,21 @@
 # Documentação Técnica — Site de Joias (Vitrine + Painel Próprio)
 
+## 0. Estado Atual (27/09/2026)
+
+Este documento é a v1 do planejamento (setembro/2026, antes do código). Muita coisa mudou desde então — as seções abaixo foram ajustadas onde divergiam, mas o histórico de decisão continua registrado como estava. Em caso de conflito entre este documento e o código/`CLAUDE.md`, vale o `CLAUDE.md` e o código.
+
+**Pronto e mesclado em `main` (blocos 1 a 5, `feat/*`):**
+- Vitrine completa: Home, `/catalogo` (filtro + paginação), `/busca?q=` (resultados agrupados por categoria), `/produto/:id`, `/carrinho` (com seletor de quantidade e estado vazio), `/pedido` (confirmação pós-WhatsApp), `/sobre`, `/privacidade`, `/termos`, 404 — ver seção 3.2 (atualizada).
+- Design final aprovado em `docs/design/*.dc.html` (não o piloto serif+bronze, que foi só teste). Busca e Carrinho são páginas, não overlays; o único overlay é o Menu mobile. Isso substitui a proposta de mega menu/painel de busca da seção 3.1 (mantida abaixo só como referência histórica).
+- Carrinho: `localStorage` guardando só `{ id, quantidade }`, resolvendo nome/preço pelo catálogo atual a cada renderização (evita preço desatualizado); total calculado em um único lugar.
+- Revisão geral concluída (branch `chore/revisao-geral`, mesclada em `main`): correções de acessibilidade (skip link, foco por rota, nome acessível do carrinho, áreas de toque 44px), `<title>`/`<meta name="description">` nativos do React 19 por rota, `netlify.toml` com cabeçalhos de cache, logo otimizado (2x no header, 300px no footer via `srcset`), CSS embutido no HTML no build (elimina requisição bloqueante). Lighthouse nas 5 rotas principais: Desempenho 99-100, Acessibilidade 100, Boas práticas 100, SEO 100 (58→66 no Carrinho, que tem `noindex` de propósito).
+
+**No ar (Netlify, teste):** deploy conectado ao GitHub (`jpofof/site-joias`, branch `main`), com bloqueio temporário de indexação (`robots.txt` com `Disallow: /` e cabeçalho `X-Robots-Tag: noindex, nofollow` em `netlify.toml`, ambos marcados "TEMPORÁRIO: remover no lançamento"). Ainda sem produtos, fotos, WhatsApp nem dados legais reais — ver pendências no README e na seção 9.
+
+**Em andamento:** bloco 6 (`feat/cms`) — Decap CMS em `/admin`. Decisão de autenticação já tomada (seção 4): GitHub OAuth via Netlify Function própria, sem Netlify Identity (descontinuada para sites novos), com fluxo editorial (cada edição gera branch + Pull Request).
+
+**Pendente:** conteúdo real da cliente (produtos, fotos, WhatsApp, textos institucionais, dados legais — ver seção 9), domínio próprio, remoção do bloqueio de indexação no lançamento.
+
 ## 1. Visão Geral do Projeto
 
 Vitrine online de joias para cliente próxima, com objetivo de exibir produtos, permitir seleção via carrinho e redirecionar o interesse de compra para o WhatsApp. Sem checkout/pagamento no site. Cliente atualiza o catálogo sozinha via painel de edição.
@@ -38,7 +54,9 @@ Dona do negócio (cliente)
 
 Nenhum servidor próprio, nenhum banco de dados tradicional — os dados dos produtos vivem como arquivos (Markdown/JSON) dentro do próprio repositório, versionados no Git.
 
-## 3.1. Navegação e Modelo de Produto (escopo reduzido, validado em wireframe)
+## 3.1. Navegação e Modelo de Produto (escopo reduzido, validado em wireframe) — **referência histórica, substituída pelo design aprovado**
+
+> Esta seção (mega menu, painel de busca sobreposto, cabeçalho sem hambúrguer) foi a proposta anterior ao design final. **Não é o que foi implementado.** O que vale é `docs/design/*.dc.html`, mapeado em `docs/reference/design-handoff.md`: cabeçalho com Menu mobile (overlay), Busca e Carrinho como **páginas próprias** (`/busca`, `/carrinho`), sem mega menu e sem painel sobreposto. O modelo de produto abaixo também mudou: ver `src/types/produto.ts` (ganhou `imagens?: string[]` e `detalhes?: DetalhesProduto`). Texto mantido abaixo só como histórico da decisão original.
 
 Foi produzida uma análise de UX completa para cabeçalho, mega menu e pesquisa (arquitetura para catálogos grandes, com painel de categorias em colunas, painel de busca com recomendações e campos de destaque). Essa arquitetura **foi guardada como referência** em `docs/reference/arquitetura-navegacao-mega-menu.md`, para ser retomada se o catálogo crescer além de 20-25 produtos. Para o escopo atual, foi validada em wireframe interativo (5 iterações) uma versão intermediária: mais simples que a arquitetura grande, mas mantendo um painel de busca com sugestões.
 
@@ -85,26 +103,42 @@ Sem `featuredOrder` nem `createdAt`: a ordem de destaque segue a ordem de cadast
 
 **Wireframes de referência (privados, não versionados no repositório):** 5 iterações publicadas como artifacts durante o desenho desta seção, da estrutura inicial até a versão aprovada com painel de busca e destaques.
 
-## 3.2. Rotas do Site
+## 3.2. Rotas do Site (implementado)
 
-Com o cabeçalho aprovado (seção 3.1) e as decisões abaixo, o site deixou de ser uma página só com âncoras e passa a ter rotas de verdade:
+Rotas reais via `react-router-dom`, todas implementadas e mescladas em `main`:
 
-- `/` — Home (hero + seções + vitrine completa, ver 3.3)
-- `/produto/:id` — página própria de cada produto (fotos maiores, descrição completa)
-- `/sobre` — página própria, texto institucional
+- `/` — Home (Hero, CategoryTiles, destaques, novidades, seção Sobre, passos do pedido — ver 3.3)
+- `/catalogo` — filtro por categoria, grade e paginação ("Página X de Y")
+- `/busca?q=` — resultados agrupados por categoria, contagem, chips de salto, estado sem resultados
+- `/produto/:id` — página própria de cada produto (galeria, descrição, detalhes)
+- `/carrinho` — página própria (não overlay), com estado vazio
+- `/pedido` — confirmação depois do envio pelo WhatsApp
+- `/sobre`, `/privacidade`, `/termos` — páginas institucionais/legais
+- `*` — 404
 
-O carrinho e o painel de busca continuam **globais**: abrem por cima de qualquer uma dessas três rotas, sem navegar para lugar nenhum.
+Busca e Carrinho são **páginas**, não overlays — divergência da proposta original (seção 3.1), decidida no design aprovado. O único overlay do site é o Menu mobile.
 
-**Consequências técnicas:**
-- Precisa de uma biblioteca de rotas (`react-router-dom`) — não fazia parte da stack até aqui.
-- O Netlify precisa de uma regra de redirecionamento para rotas do lado do cliente funcionarem ao recarregar a página ou abrir um link direto: arquivo `public/_redirects` com a linha `/* /index.html 200`.
-- Se o `id` da URL de `/produto/:id` não existir mais no catálogo (produto removido pela cliente), mostrar uma mensagem de "produto não encontrado" com link de volta ao catálogo, em vez de tela em branco.
+**Consequências técnicas (confirmadas):**
+- `react-router-dom` na stack.
+- `public/_redirects` com `/* /index.html 200`, para rotas do lado do cliente funcionarem em recarga e link direto.
+- Produto removido do catálogo: `/produto/:id` cai na 404, em vez de tela em branco.
+- `/carrinho`, `/pedido` e a 404 têm `<meta name="robots" content="noindex">` (não fazem sentido indexados).
 
-## 3.3. Página Inicial (Home) — proposta inicial, valida com wireframe
+## 3.3. Página Inicial (Home) — implementado, estrutura final diferente da proposta
 
-Esboço de arquitetura para a Home, aprovado por João em wireframe. Vários dos conteúdos abaixo dependem do que a cliente vai fornecer e ficam como propostas em aberto até ela decidir (marcados como tal).
+A estrutura abaixo (seções 1-6) foi a proposta original e **não é a que está implementada**. A Home real, aprovada no design (`docs/design/`), segue esta ordem:
 
-**Estrutura, de cima para baixo:**
+1. **Hero** — foto + frase + link/CTA, editáveis pela cliente via CMS (bloco 6), sem lista fixa de opções para o link.
+2. **CategoryTiles** — blocos de categoria levando ao catálogo já filtrado.
+3. **ProductShowcase "Destaques da marca"** — produtos com `destaque: true` (rótulo "Peças em destaque", nunca "mais vendidos" — sem dado real de vendas, o pedido fecha pelo WhatsApp).
+4. **ProductShowcase "Novidades"** — os 4 primeiros produtos do array (ordem de cadastro no CMS), com selo "NOVO".
+5. **SobreHome** — frase + texto + foto opcional (some se vazio).
+6. **PassosPedido** — os 3 passos do fluxo (Carrinho → Revisão → WhatsApp).
+7. **SiteFooter** (via `Layout`, comum a todas as rotas).
+
+Não há uma seção de "vitrine completa" nem "fotos de estilo de vida" (`LifestyleStrip`) na Home — a grade completa com filtro vive em `/catalogo`. O texto abaixo (proposta original, itens 1-6 antigos) fica só como histórico.
+
+**Estrutura original proposta (histórico, não implementada como estava):**
 1. **Hero:** foto grande (produto ou pessoa usando), com uma frase sobreposta e um botão/link.
 2. **Categorias:** 4-6 blocos com foto + nome (Anéis, Brincos, Colares, Pulseiras, Piercings, Linha masculina), cada um levando à vitrine já filtrado por aquela categoria. Sem título de seção.
 3. **Destaques:** frase curta à esquerda ("Peças em destaque", **não** "mais vendidos" — o site não tem como saber o que realmente mais vende, já que o pedido fecha pelo WhatsApp) com link, e um vídeo ou foto à direita. Reaproveita o mesmo campo `destaque` já decidido para o painel de busca (seção 3.1): a cliente marca as peças uma vez, e a marcação alimenta as duas áreas.
@@ -122,7 +156,7 @@ Esboço de arquitetura para a Home, aprovado por João em wireframe. Vários dos
 
 **Footer — campos opcionais** (mesma coleção de "Configurações do site"): WhatsApp, e-mail, Instagram, TikTok — cada um opcional, só aparece se preenchido. Conteúdo real (quais redes ela realmente tem) ainda não foi confirmado pela cliente.
 
-**Avisos legais (aberto, não decidido por João nem por Claude):** o site, como descrito hoje, não coleta dado pessoal por conta própria (carrinho fica só em `localStorage` do navegador). Nesse cenário, uma política de privacidade curta provavelmente basta, sem banner de cookies. Se a cliente quiser usar pixel de rastreamento (Meta/Instagram Ads, Google Analytics), aí entra coleta de dado de navegação e passa a ser recomendável um aviso de cookies. Perguntar à cliente se ela pretende usar algum desses antes de decidir. Texto de política de privacidade deve ser revisado por advogado antes de publicar — não é algo para o Claude Code redigir sozinho.
+**Avisos legais — decidido:** sem banner de cookies e sem analytics/pixel; só `localStorage` essencial do carrinho. As páginas `/privacidade` e `/termos` estão implementadas, com o texto dos quadros do design (`docs/design/`), não redigido pelo Claude. Campos entre colchetes (`src/config/legal.ts`) seguem pendentes da cliente, e a revisão jurídica continua recomendada antes de publicar.
 
 ## 4. Stack Tecnológica
 
@@ -131,54 +165,36 @@ Esboço de arquitetura para a Home, aprovado por João em wireframe. Vários dos
 - **Estilização:** Tailwind CSS v4 (plugin `@tailwindcss/vite`; tema configurado via `@theme` no CSS, sem `tailwind.config.ts` obrigatório)
 - **Qualidade de código:** ESLint
 - **Gerenciamento de estado do carrinho:** Context API + hook customizado (`useCart`), persistido em `localStorage`
-- **CMS:** Decap CMS (admin em `/admin`, autenticação via Netlify Identity ou GitHub)
+- **CMS:** Decap CMS (admin em `/admin`). Autenticação decidida: GitHub OAuth via Netlify Function própria (`netlify/functions/`), sem Netlify Identity (descontinuada para sites novos), com fluxo editorial (`publish_mode: editorial_workflow` — cada edição gera branch + Pull Request, sem publicação direta em `main`). Implementação em andamento no bloco `feat/cms`.
 - **Hospedagem/Deploy:** Netlify (mesmo fluxo já usado nos outros projetos)
 - **Controle de versão:** Git + GitHub
 
-## 5. Estrutura de Arquivos Planejada
+## 5. Estrutura de Arquivos (implementada; ver o repositório para a lista completa e atual)
+
+A árvore planejada abaixo era a v1; a estrutura real, mescladas as decisões de design e as correções do review, ficou assim (resumo, sem repetir todo arquivo):
 
 ```
 site-joias/
   public/
-    admin/
-      config.yml          # configuração do Decap CMS (coleções, campos)
-      index.html          # entrada do painel admin
-    _redirects            # regra de SPA para o Netlify — ver seção 3.2
+    _redirects, robots.txt, favicon.svg, logo-eduah.png, logo-eduah-300.png, fonts/
+    admin/                 # bloco feat/cms (em andamento): config.yml, index.html
   src/
-    types/
-      produto.ts           # type Produto (id, nome, categoria, preco, imagem, descricao?, destaque?) — ver seção 3.1
-      site-config.ts        # type dos campos de "Configurações do site" (hero, footer) — ver seção 3.3
-    pages/
-      Home.tsx              # hero + categorias + destaques + lifestyle + vitrine — ver seção 3.3
-      Produto.tsx            # rota /produto/:id — ver seção 3.2
-      Sobre.tsx               # rota /sobre — ver seção 3.2
-    components/
-      Hero.tsx               # foto + frase + link/CTA editáveis via CMS
-      CategoryTiles.tsx      # blocos de categoria na Home
-      DestaquesTeaser.tsx    # frase + vídeo/foto, usa produtos com destaque=true
-      LifestyleStrip.tsx     # tira de fotos de estilo de vida, cada uma com link
-      ProductCard.tsx        # recebe um Produto via props
-      ProductGrid.tsx        # recebe Produto[] e faz o map por categoria
-      CategoryFilter.tsx     # filtro por categoria (pulseiras, anéis, etc.)
-      SearchPanel.tsx         # painel de busca (categorias + sugestões via destaque + resultados) — ver seção 3.1
-      Cart.tsx                # painel/drawer do carrinho
-      CartButton.tsx          # botão flutuante com contagem de itens
-      WhatsAppCTA.tsx         # monta o link wa.me com os itens selecionados
-      SiteFooter.tsx          # links, contato (campos opcionais) — ver seção 3.3
-    hooks/
-      useCart.ts             # lógica do carrinho + persistência em localStorage
-    context/
-      CartContext.tsx        # provider do carrinho pra toda a árvore de componentes
-    data/
-      produtos/               # arquivos .md ou .json gerados/editados pelo Decap CMS
-      site-config.json         # arquivo único gerado pelo Decap ("Configurações do site")
-    App.tsx
-    main.tsx
-  netlify.toml
-  package.json
-  tailwind.config.ts      # opcional no Tailwind v4 (tema via @theme em src/index.css)
-  tsconfig.json
+    types/produto.ts       # Categoria, DetalhesProduto, Produto (com imagens?, detalhes?)
+    config/                # site.ts, legal.ts, categorias.ts — único lugar de cada configuração
+    pages/                 # Home, Catalogo, Busca, Produto, Carrinho, Pedido, Sobre, Privacidade, Termos, NotFound
+    components/            # Layout, SiteHeader, MenuMobile, SiteFooter, Hero, CategoryTiles, ProductShowcase,
+                            # ProductCard, ProductGrid, CategoryFilter, SearchField, CartItem, SobreHome,
+                            # PassosPedido, PaginaTexto/PaginaLegal (Privacidade e Termos), PaginaMeta (title/description), icons
+    hooks/useCart.ts, useTamanhoPagina.ts
+    context/CartContext.tsx
+    lib/carrinho.ts (mensagem WhatsApp, total), legal.ts (formatação de data/campos pendentes)
+    content/privacidade.ts, termos.ts  # texto das páginas legais (fixo, não editável pelo CMS)
+    data/produtos/index.ts # catálogo de exemplo (24 produtos); vira JSON no bloco feat/cms
+    App.tsx, main.tsx
+  netlify.toml, vite.config.ts, package.json, tsconfig*.json
 ```
+
+Sem `LifestyleStrip`, `SearchPanel`, `Cart`/`CartButton`/`WhatsAppCTA` como componentes separados (a proposta v1) — a implementação real usa páginas inteiras para Busca e Carrinho, e a lógica de WhatsApp está em `src/lib/carrinho.ts`.
 
 ## 6. Fluxo de Trabalho (fases)
 
@@ -300,21 +316,18 @@ npx skills add rtadewald/skills@img-to-html -g -y
 
 ## 9. Itens em Aberto
 
-- Definir se o CMS será Decap CMS (com login) ou modelo mais simples (planilha), com base na familiaridade da cliente. Se for Decap, decidir o método de autenticação antes do bloco do CMS: Netlify Identity + Git Gateway (Identity foi sinalizado como descontinuado pela Netlify em fev/2025, sem previsão imediata de remoção; conferir o estado atual), backend GitHub com proxy OAuth (ex.: Cloudflare Worker, exige OAuth App e subdomínio, e a cliente precisa de conta no GitHub com acesso ao repositório) ou o modelo mais simples. Fazer um teste pequeno numa branch com o perfil real da cliente antes de fechar
-- Pedir à cliente: identidade visual (logo, paleta, fontes), fotos (e quantas precisam ser refeitas), referências de sites de que ela gosta e o número de WhatsApp do chip novo
-- Cabeçalho e painel de busca (seção 3.1) já validados por João em wireframe interativo (5 iterações); falta só mostrar à cliente e confirmar o limite de produtos em destaque (sugestão: 4 a 6)
-- Confirmar quantidade final de fotos que precisam ser refeitas
-- Confirmar valor final dentro da faixa R$1.800–R$2.500 após levantamento de fotos/ajustes
-- Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude
-- Avaliar no navegador o `ProductCard` redesenhado (branch `teste-skill-design`) e decidir se a direção estética serve à cliente; se aprovado, fazer merge ou reaproveitar no projeto real
-- Hospedar localmente a fonte serif escolhida (Cormorant Garamond), em vez de depender de serviço externo
-- Confirmar se cada produto terá mais de uma foto (galeria na página `/produto/:id`) ou só a mesma foto do card ampliada — muda o tipo `Produto` (`imagem: string` → `imagens: string[]`)
-- Definir a página `/produto/:id`, a página `/sobre` (conteúdo institucional, vem da cliente) e o detalhe da interface do carrinho (drawer) — ainda não desenhados em wireframe
-- Home (seção 3.3): decidir o link do hero (proposta: campo livre editável pela cliente no Decap, não fixo no código)
-- Home: decidir hospedagem do vídeo de destaques — vídeo comitado no repositório (comprimido) vs. serviço externo (YouTube/Vimeo/Cloudinary); revisitar se o tamanho do repositório crescer demais
-- Footer: confirmar com a cliente quais contatos/redes ela realmente tem (WhatsApp, e-mail, Instagram, TikTok) — os campos já são opcionais no CMS, falta o conteúdo
-- Perguntar à cliente se ela pretende usar pixel de rastreamento (Meta/Instagram Ads, Google Analytics); a resposta decide se o site precisa de aviso de cookies além da política de privacidade
-- Redigir a política de privacidade do site (e aviso de cookies, se aplicável) — revisão por advogado recomendada antes de publicar; não é algo para o Claude Code decidir ou redigir sozinho
+**Resolvidos desde a v1 (mantidos aqui só como registro):** autenticação do CMS (GitHub OAuth via Netlify Function, seção 4); cabeçalho/busca/carrinho (design final em `docs/design/`, seção 3.1); link do hero (campo livre, editável no CMS); campos opcionais do footer (já implementados, só falta o conteúdo real); banner de cookies e pixel (decidido: nenhum dos dois); fonte hospedada localmente (`public/fonts/`); `/produto/:id`, `/sobre` e a interface do carrinho (implementados).
+
+**Ainda pendentes (dependem da cliente ou de decisão de negócio):**
+- Produtos reais (nomes, preços, categorias, fotos, descrições) — hoje o catálogo é 24 itens de exemplo em `src/data/produtos/index.ts`.
+- Número de WhatsApp do chip novo (`src/config/site.ts`) — sem ele o botão de enviar pedido fica desabilitado.
+- Fotos reais e quantas precisam ser refeitas.
+- Frase da marca, Instagram, textos da seção Sobre (Home e página `/sobre`).
+- Os 10 campos de `src/config/legal.ts` (responsável, CPF/CNPJ, e-mail, prazos, foro, política de trocas, datas) — revisão jurídica recomendada antes de publicar.
+- Domínio próprio da cliente (DNS apontando para o Netlify).
+- Remover o bloqueio temporário de indexação (`robots.txt` e `X-Robots-Tag` em `netlify.toml`) no lançamento, e conferir o `robots.txt` no ar depois.
+- Confirmar valor final dentro da faixa R$1.800–R$2.500 após levantamento de fotos/ajustes.
+- Decidir se vale revisitar o Strix mais adiante (precisa Docker + API paga) caso o escopo do projeto mude.
 
 ## 10. Referência de Implementação (piloto)
 
@@ -363,9 +376,9 @@ Economia: ~30,7k tokens só em MCP (~67% dessa categoria) e ~31,9k no total (~30
 
 - **Piloto (referência, não usar em produção):** GitHub `jpofof/site-joias-piloto` (privado), branches `main` (carrinho) e `teste-skill-design` (redesenho do `ProductCard` com Tailwind v4 + skill `frontend-design`), tags `piloto-carrinho` e `piloto-design-card`. Pasta local: `C:\Users\jpofe\Downloads\skills-test-harness\site-joias-teste\`.
 - **Projeto real:** GitHub `jpofof/site-joias` (privado), pasta local `C:\Users\jpofe\projetos\site-joias\`.
-- **Estado (21/09/2026):** scaffold Vite + React + TypeScript + Tailwind v4 (`@tailwindcss/vite`) + ESLint commitado e enviado para `main`; `npm run build` e `npm run lint` passam sem erro. `App.tsx` está vazio de propósito (exemplo do template removido). Documentos do piloto (spec e plano do carrinho) copiados para `docs/reference/piloto/`.
-- **Ambiente do Claude Code configurado no projeto novo:** `docs/` com esta documentação e o spec/plano do carrinho do piloto (`docs/reference/piloto/`), `CLAUDE.md` (regras do Karpathy no topo + convenções do projeto, incluindo as correções obrigatórias do review do piloto), skill `frontend-design` em `.claude/skills` (confirmada como invocável pela ferramenta Skill), `/img-to-html` disponível, MCP reduzido a `claude-in-chrome` e `claude-mem`, Headroom desativado.
-- **Próximos passos:** (1) receber os materiais da cliente (ver seção 9); (2) Fase 1 (design) → Fase 2 (implementação por blocos, uma branch por bloco, validação da cliente entre eles); (3) decidir a autenticação do Decap antes do bloco do CMS.
+- **Estado (27/09/2026):** blocos 1 a 5 implementados e mesclados em `main` (base visual, vitrine, busca, carrinho, páginas legais), mais a revisão geral (`chore/revisao-geral`) e o bloqueio temporário de indexação (`chore/pre-lancamento`) — ver seção 0. `npm run build`, `npm run lint` e `npx tsc --noEmit` passam sem erro. Deploy de teste ativo no Netlify, conectado a `jpofof/site-joias` (branch `main`), com o site bloqueado para indexação. Bloco 6 (`feat/cms`) em andamento.
+- **Ambiente do Claude Code:** `docs/` com esta documentação, `docs/design/` (fonte de verdade visual) e `docs/reference/` (mapa do design, arquitetura de navegação como referência histórica); `CLAUDE.md` com as regras do projeto (atualizado a cada bloco); skill `frontend-design` disponível; MCP reduzido a `claude-in-chrome` e `claude-mem`.
+- **Próximos passos:** (1) bloco 6 — Decap CMS (`/admin`), com a autenticação já decidida (seção 4); (2) receber os materiais reais da cliente (seção 9); (3) remover o bloqueio de indexação e publicar de fato.
 - **Fluxo de trabalho:** uma branch por bloco a partir de `main` (ex.: `feat/vitrine`, `feat/carrinho`, `feat/cms`); diff revisado antes de cada commit; nada de commit ou push autônomo; `tsc`, `lint` e `build` limpos antes do push; Conventional Commits com mensagem em inglês e português.
 
 Este documento (`documentacao-projeto-joias.md`) é um arquivo estático — se a conversa mudar, ele precisa ser enviado novamente para dar contexto técnico completo.

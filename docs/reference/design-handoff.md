@@ -1,5 +1,7 @@
 # Design handoff — Eduáh Acessórios (site-joias)
 
+> **Atualização (27/09/2026):** os blocos 1 a 5 (§8: `feat/base-visual`, `feat/vitrine`, `feat/busca`, `feat/carrinho`, `feat/paginas-legais`) foram implementados e mesclados em `main`, seguidos de uma revisão geral (acessibilidade, SEO, desempenho) e de um deploy de teste no Netlify com bloqueio temporário de indexação. Bloco 6 (`feat/cms`) em andamento. As divergências do `CLAUDE.md` listadas no §7 abaixo foram de fato aplicadas: rotas atuais (`/`, `/catalogo`, `/busca`, `/produto/:id`, `/carrinho`, `/pedido`, `/sobre`, `/privacidade`, `/termos`, `*`), carrinho com seletor de quantidade (não mais presença/ausência), Menu mobile com botão (sem hambúrguer escondendo item), Busca como página (não overlay/`SearchPanel`), texto de Privacidade/Termos vindo do design (não redigido pelo Claude) e nenhum banner de cookies. Ver `docs/documentacao-projeto-joias.md` (seção 0) para o estado atual completo. O restante deste documento não foi reescrito.
+
 **Regra principal: o design é a fonte de verdade.** Implementar EXATAMENTE como nos arquivos de `docs/design/` (desktop 1440, tablet 768, mobile 390). Onde este documento, o design e o `CLAUDE.md` divergirem sobre visual, páginas, navegação ou comportamento de tela, vale o design. O `CLAUDE.md` continua valendo para processo (fluxo de Git, ESLint, `type="button"`, fontes locais, Tailwind v4 com `@theme`, sem dependências novas, um único `ProductCard`).
 
 Preview ao vivo: https://claude.ai/artifact/QjxvZBeyjHwJFLpaqtf4Jv
