@@ -5,7 +5,7 @@
       "nome": "Anel Exemplo 01",
       "categoria": "aneis",
       "preco": 89.9,
-      "imagem": "",
+      "imagem": "/images/produtos/nalaura.jpg",
       "descricao": "Descrição de exemplo, a substituir pelo texto real.",
       "detalhes": {
         "material": "Material de exemplo",
