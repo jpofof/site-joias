@@ -27,3 +27,6 @@ dist-ssr
 .env.*
 !.env.example
 .claude/settings.local.json
+
+# Local Netlify folder
+.netlify

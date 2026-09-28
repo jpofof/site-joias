@@ -8,6 +8,14 @@
     <link rel="preload" href="/fonts/bodoni-moda-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin />
     <title>Eduáh Acessórios</title>
+    <!-- Fallback estático pra bots de preview que não executam JS (PaginaMeta.tsx substitui isso em runtime
+         pra usuários reais e pro Googlebot; a página de produto tem sua própria Edge Function). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Eduáh Acessórios" />
+    <meta property="og:description" content="Joias e acessórios da Eduáh: anéis, brincos, colares, pulseiras, piercings e linha masculina." />
+    <!-- Absoluta: precisa bater com SITE_URL em src/config/seo.ts (HTML estático não pode importar essa constante). -->
+    <meta property="og:image" content="https://mellifluous-kleicha-5eff41.netlify.app/logo-eduah.png" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>

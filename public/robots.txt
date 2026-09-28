@@ -1,3 +1,5 @@
-# TEMPORÁRIO: remover no lançamento
 User-agent: *
-Disallow: /
+Allow: /
+
+# Precisa bater com SITE_URL em src/config/seo.ts.
+Sitemap: https://mellifluous-kleicha-5eff41.netlify.app/sitemap.xml

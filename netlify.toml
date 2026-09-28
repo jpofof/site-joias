@@ -9,12 +9,6 @@
   # O Vite 8 exige Node ^20.19.0 ou >=22.12.0.
   NODE_VERSION = "22"
 
-# TEMPORÁRIO: remover no lançamento
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
-
 # Cabeçalhos de segurança. O site não usa câmera, microfone nem geolocalização.
 [[headers]]
   for = "/*"
