@@ -15,6 +15,15 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# Cabeçalhos de segurança. O site não usa câmera, microfone nem geolocalização.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
 # HTML (e as rotas que caem no index.html) sempre revalidado; os arquivos com hash abaixo sobrescrevem este valor.
 [[headers]]
   for = "/*"

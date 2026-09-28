@@ -1,9 +1,20 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { SITE_URL } from '../config/seo'
+import { site } from '../config/site'
 import { useCart } from '../hooks/useCart'
 import MenuMobile from './MenuMobile'
 import SiteFooter from './SiteFooter'
 import SiteHeader from './SiteHeader'
+
+// Organization (Schema.org): sem endereço/telefone, que a cliente ainda não informou.
+const organizacaoJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.nome,
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-eduah.png`,
+}
 
 /** Contexto do Outlet: páginas podem abrir o Menu mobile (ex.: "Ver categorias" na Busca sem resultados). */
 export type LayoutContext = {
@@ -64,6 +75,7 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <script type="application/ld+json">{JSON.stringify(organizacaoJsonLd)}</script>
       <a
         href="#conteudo"
         onClick={pularParaConteudo}

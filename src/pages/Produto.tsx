@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import ProductGrid from '../components/ProductGrid'
 import PaginaMeta from '../components/PaginaMeta'
 import { nomeDaCategoria, urlCategoria } from '../config/categorias'
+import { SITE_URL } from '../config/seo'
 import { produtos } from '../data/produtos'
 import { useCart } from '../hooks/useCart'
 import { QUANTIDADE_MAXIMA, rotuloProdutos } from '../lib/carrinho'
@@ -44,6 +45,22 @@ function PaginaProduto({ id }: { id?: string }) {
   const linhas = linhasDetalhes.filter((l) => produto.detalhes?.[l.chave])
   const relacionados = produtosRelacionados(produtos, produto, 4)
 
+  // Product (Schema.org): sem "availability" — o site não tem estoque real, e declarar InStock seria
+  // uma afirmação que o catálogo (pedido só por WhatsApp) não tem como sustentar.
+  const produtoJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: produto.nome,
+    image: `${SITE_URL}${produto.imagem || '/logo-eduah.png'}`,
+    ...(produto.descricao ? { description: produto.descricao } : {}),
+    offers: {
+      '@type': 'Offer',
+      price: produto.preco.toFixed(2),
+      priceCurrency: 'BRL',
+      url: `${SITE_URL}/produto/${produto.id}`,
+    },
+  }
+
   function adicionarAoCarrinho() {
     if (!produto) return
     const resultado = adicionar(produto.id, quantidade)
@@ -76,7 +93,10 @@ function PaginaProduto({ id }: { id?: string }) {
       <PaginaMeta
         titulo={produto.nome}
         descricao={produto.descricao || `${produto.nome}, da categoria ${categoria}. Veja os detalhes e adicione ao carrinho.`}
+        imagem={produto.imagem}
+        tipo="product"
       />
+      <script type="application/ld+json">{JSON.stringify(produtoJsonLd)}</script>
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {anuncio}
       </div>
