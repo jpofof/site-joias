@@ -25,7 +25,11 @@
 [[headers]]
   for = "/admin/*"
   [headers.values]
-    Content-Security-Policy = ""
+    # Um valor vazio não sobrescreve a regra de "/*" acima (o Netlify trata "" como "sem valor" e ignora
+    # o bloco pra esse header) — testado no deploy preview do PR #4. Precisa de um valor concreto e
+    # permissivo o bastante pra não restringir nada, já que "/admin" só roda o Decap CMS (editor de
+    # terceiros) e já está coberto contra clickjacking pelo X-Frame-Options global.
+    Content-Security-Policy = "default-src * data: blob: 'unsafe-inline' 'unsafe-eval'"
 
 # HTML (e as rotas que caem no index.html) sempre revalidado; os arquivos com hash abaixo sobrescrevem este valor.
 [[headers]]
