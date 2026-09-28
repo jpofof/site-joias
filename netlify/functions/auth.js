@@ -10,12 +10,22 @@ export default async (req) => {
 
   const url = new URL(req.url)
   const redirectUri = `${url.origin}/.netlify/functions/callback`
+  const state = crypto.randomUUID()
 
   const autorizar = new URL('https://github.com/login/oauth/authorize')
   autorizar.searchParams.set('client_id', clientId)
   autorizar.searchParams.set('redirect_uri', redirectUri)
-  autorizar.searchParams.set('scope', 'repo,user')
-  autorizar.searchParams.set('state', crypto.randomUUID())
+  // "public_repo" (não "repo"): o repo é público, não precisa de acesso a repos privados.
+  autorizar.searchParams.set('scope', 'public_repo,user')
+  autorizar.searchParams.set('state', state)
 
-  return Response.redirect(autorizar.toString(), 302)
+  // O "state" só protege contra CSRF se for validado depois: guardado num cookie de curta duração
+  // (10 min), restrito ao path do callback, pra callback.js comparar com o state devolvido pelo GitHub.
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: autorizar.toString(),
+      'Set-Cookie': `oauth_state=${state}; Path=/.netlify/functions/callback; Max-Age=600; HttpOnly; Secure; SameSite=Lax`,
+    },
+  })
 }

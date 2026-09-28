@@ -3,6 +3,13 @@
 // uma página que entrega o token ao Decap CMS, pelo protocolo de handshake por postMessage que o
 // Decap espera de um provedor de OAuth externo: a janela popup avisa "authorizing:github", espera
 // a janela principal responder (ela sabe a origem certa a usar) e só então manda o token.
+
+// Cookie gravado por auth.js: só o valor de "oauth_state" interessa aqui.
+function lerCookie(cabecalho, nome) {
+  const encontrado = cabecalho.split('; ').find((parte) => parte.startsWith(`${nome}=`))
+  return encontrado ? decodeURIComponent(encontrado.slice(nome.length + 1)) : null
+}
+
 export default async (req) => {
   const clientId = process.env.GITHUB_OAUTH_CLIENT_ID
   const clientSecret = process.env.GITHUB_OAUTH_CLIENT_SECRET
@@ -16,6 +23,14 @@ export default async (req) => {
   const code = url.searchParams.get('code')
   if (!code) {
     return new Response('Código de autorização ausente.', { status: 400 })
+  }
+
+  // Valida o "state" contra o cookie gravado por auth.js: sem isso, o "state" gerado lá não protege
+  // nada contra CSRF (um code de outra pessoa poderia ser "encaixado" na sessão da vítima).
+  const state = url.searchParams.get('state')
+  const stateEsperado = lerCookie(req.headers.get('cookie') ?? '', 'oauth_state')
+  if (!state || !stateEsperado || state !== stateEsperado) {
+    return new Response('Falha na autenticação: state inválido ou ausente.', { status: 400 })
   }
 
   const respostaToken = await fetch('https://github.com/login/oauth/access_token', {
@@ -51,5 +66,11 @@ export default async (req) => {
   </body>
 </html>`
 
-  return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
+  return new Response(html, {
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      // Cookie de uso único: não serve mais depois de validado.
+      'Set-Cookie': 'oauth_state=; Path=/.netlify/functions/callback; Max-Age=0',
+    },
+  })
 }
