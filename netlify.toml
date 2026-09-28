@@ -17,6 +17,19 @@
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Só no site público: o /admin carrega o Decap CMS (editor de terceiros) via unpkg, e testar uma CSP
+    # estrita contra esse editor não compensa aqui — o /admin já está coberto contra clickjacking pelo
+    # X-Frame-Options acima. Por isso o bloco abaixo limpa a CSP de volta para /admin/*.
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://unpkg.com; connect-src 'self' https://api.github.com https://github.com; img-src 'self' data: https://avatars.githubusercontent.com; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    # Um valor vazio não sobrescreve a regra de "/*" acima (o Netlify trata "" como "sem valor" e ignora
+    # o bloco pra esse header) — testado no deploy preview do PR #4. Precisa de um valor concreto e
+    # permissivo o bastante pra não restringir nada, já que "/admin" só roda o Decap CMS (editor de
+    # terceiros) e já está coberto contra clickjacking pelo X-Frame-Options global.
+    Content-Security-Policy = "default-src * data: blob: 'unsafe-inline' 'unsafe-eval'"
 
 # HTML (e as rotas que caem no index.html) sempre revalidado; os arquivos com hash abaixo sobrescrevem este valor.
 [[headers]]
